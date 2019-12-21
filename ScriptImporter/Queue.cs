@@ -247,7 +247,7 @@ namespace OpenCollarBot.ScriptImporter
                         {
                             X.ActualQueue.Remove(Recipient);
 //                            inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
-                            List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30));
+                            List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30).Milliseconds);
 
                             foreach(InventoryBase bas in folders){
                                 inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);

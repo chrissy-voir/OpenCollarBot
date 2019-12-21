@@ -7,12 +7,18 @@
     <StartupObject />
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="libremetaverse\**" />
+    <EmbeddedResource Remove="libremetaverse\**" />
+    <None Remove="libremetaverse\**" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Bot\bin\Debug</OutputPath>
+    <OutputPath>bin\Debug\OCB</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\Bot\bin\Release</OutputPath>
+    <OutputPath>bin\Release\OCB</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,22 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bot\Bot.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="LibreMetaverse">
-      <HintPath>..\..\libremetaverse\bin\netcoreapp3.0\LibreMetaverse.dll</HintPath>
-    </Reference>
-    <Reference Include="LibreMetaverse.StructuredData">
-      <HintPath>..\..\libremetaverse\bin\netcoreapp3.0\LibreMetaverse.StructuredData.dll</HintPath>
-    </Reference>
-    <Reference Include="LibreMetaverse.Types">
-      <HintPath>..\..\libremetaverse\bin\netcoreapp3.0\LibreMetaverse.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="LibreMetaverse.Utilities">
-      <HintPath>..\..\libremetaverse\bin\netcoreapp3.0\LibreMetaverse.Utilities.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="libremetaverse\LibreMetaverse.StructuredData\LibreMetaverse.StructuredData.csproj" />
+    <ProjectReference Include="libremetaverse\LibreMetaverse.Utilities\LibreMetaverse.Utilities.csproj" />
+    <ProjectReference Include="libremetaverse\LibreMetaverseTypes\LibreMetaverse.Types.csproj" />
+    <ProjectReference Include="libremetaverse\LibreMetaverse\LibreMetaverse.csproj" />
+    <ProjectReference Include="Core5\Bot.csproj" />
   </ItemGroup>
 
 </Project>
