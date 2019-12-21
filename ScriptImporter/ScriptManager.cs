@@ -98,7 +98,7 @@ namespace OpenCollarBot.ScriptImporter
                     // Get the file text and add to queued items
                     StreamReader sr = new StreamReader(hwresp.GetResponseStream());
                     QT.Text = sr.ReadToEnd();
-                    QT.Hash = Tools.MD5Hash(QT.Text);
+                    QT.Hash = Tools.ZHX(QT.Text);
                     QT.GitBranch = GitBranch;
                     QT.Container = kvp.Value.Container;
                     QT.ItemType = kvp.Value.Type;

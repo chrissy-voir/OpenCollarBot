@@ -238,7 +238,7 @@ namespace OpenCollarBot.ScriptImporter
                     }
                 } else if(itemType == AssetType.Notecard)
                 {
-                    inv.RequestUploadNotecardAsset(EncodeScript(QT.Text), actualItem.UUID, delegate (bool success, string status, UUID itemID, UUID assetID)
+                    inv.RequestUploadNotecardAsset(Encoding.UTF8.GetBytes(QT.Text), actualItem.UUID, delegate (bool success, string status, UUID itemID, UUID assetID)
                     {
                         if (success)
                         {
