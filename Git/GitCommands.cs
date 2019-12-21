@@ -788,6 +788,31 @@ namespace OpenCollarBot
         }
 
         [CommandGroupMaster("Git")]
+        [CommandGroup("get_scriptlist", 5,2,"get_scriptlist [gitowner] [branch] - Retrieves the ScriptList.bdf from a specified location for editing", MessageHandler.Destinations.DEST_AGENT| MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
+        public void get_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            HttpWebRequest hwr = null;
+            HttpWebResponse hwresp = null;
+            string baseURL = "https://raw.githubusercontent.com/" + additionalArgs[0] + "/OpenCollar/" + additionalArgs[1]+"/";
+            try
+            {
+                hwr = (HttpWebRequest)HttpWebRequest.Create(baseURL + ".zi/ScriptList.bdf");
+                hwr.Method = "GET";
+                hwresp = (HttpWebResponse)hwr.GetResponse();
+            }catch(Exception e)
+            {
+                MHE(source, client, "Error fetching the BDF");
+                return;
+            }
+
+            MHE(source, client, "Saving bdf file...");
+            StreamReader sr = new StreamReader(hwresp.GetResponseStream());
+            File.WriteAllText("ScriptList.json", sr.ReadToEnd());
+
+            sr.Close();
+        }
+
+        [CommandGroupMaster("Git")]
         [CommandGroup("rem_scriptlist", 5, 1, "rem_scriptlist [scriptName] - Remove entry from BDF", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
         public void rem_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {

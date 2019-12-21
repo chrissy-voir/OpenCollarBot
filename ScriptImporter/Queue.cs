@@ -246,7 +246,13 @@ namespace OpenCollarBot.ScriptImporter
                         if (kvp.Value.Count == 0)
                         {
                             X.ActualQueue.Remove(Recipient);
-                            inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
+//                            inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
+                            List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30));
+
+                            foreach(InventoryBase bas in folders){
+                                inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
+                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                            }
                         }
                         else
                         {
