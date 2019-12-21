@@ -12,9 +12,9 @@ jobs:
       with:
         submodules: true
         fetch-depth: 5
-    - uses: actions/checkout@v2
     - name: Checkout Bot submodules
       run: |
+        git submodule update --init
         cd Bot
         git submodule update --init
         cd ..
