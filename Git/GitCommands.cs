@@ -883,6 +883,47 @@ namespace OpenCollarBot
             }
         }
 
+
+        [CommandGroupMaster("Git")]
+        [CommandGroup("refresh_git_nosend", 1000, 1, "refresh_git_nosend [gitowner] - Pulls the master branch of OpenCollar from the gitowner account", MessageHandler.Destinations.DEST_ACTION)]
+        public void refresh_git_build_nosend(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "* Initializing Refresh");
+
+            HttpWebRequest hwr = null;
+            HttpWebResponse hwresp = null;
+
+            string baseURL = "https://raw.githubusercontent.com/" + additionalArgs[0] + "/OpenCollar/master/";
+
+            try
+            {
+                hwr = (HttpWebRequest)HttpWebRequest.Create(baseURL + ".zi/ScriptList.bdf");
+                hwr.Method = "GET";
+                hwresp = (HttpWebResponse)hwr.GetResponse();
+            }
+            catch (Exception e) { }
+
+            if (hwresp.StatusCode == HttpStatusCode.NotFound)
+            {
+                MHE(source, client, "The necessary script list BDF could not be found");
+                return;
+            }
+            else if (hwresp.StatusCode == HttpStatusCode.OK)
+            {
+                MHE(source, client, "BDF Located\n \n[Adding to compile Queue. Scripts will be sent after verification]");
+                StreamReader sr = new StreamReader(hwresp.GetResponseStream());
+                StreamWriter sw = new StreamWriter("ScriptList.bdf");
+                sw.Write(sr.ReadToEnd());
+
+                sr.Close();
+                sw.Close();
+
+                ScriptList downloadedList = ScriptList.Reload(true);
+                ScriptImporter.ScriptManager.AddQueue(downloadedList, UUID.Zero, additionalArgs[0]);
+            }
+        }
+
+
         [CommandGroupMaster("Git")]
         [CommandGroup("refresh_git_branch", 0, 2, "refresh_git_branch [gitOwner] [gitbranch] - Pulls the branch of OpenCollar from the gitowner account", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
         public void refresh_git_branch_build(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)

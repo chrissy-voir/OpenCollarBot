@@ -153,9 +153,12 @@ namespace OpenCollarBot.ScriptImporter
 
                 Queue.Instance.ARE = new AutoResetEvent(false);
                 inv.ItemReceived += Inv_ItemReceived;
-                inv.RequestFetchInventory(ItemID, importedItem.OwnerID);
 
-                Queue.Instance.ARE.WaitOne(TimeSpan.FromSeconds(15));
+                while (!Queue.Instance.ARE.WaitOne(TimeSpan.FromMinutes(1)))
+                {
+                    Queue.Instance.ARE.Reset();
+                    inv.RequestFetchInventory(ItemID, importedItem.OwnerID);
+                }
             }
 
             // Check that invItem is instantiated
@@ -215,12 +218,19 @@ namespace OpenCollarBot.ScriptImporter
                             {
                                 // Send the container folder, and remove this from queue
                                 //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
-                                List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30).Milliseconds);
+                                //List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30).Milliseconds);
 
-                                foreach (InventoryBase bas in folders)
+                                if (Recipient != UUID.Zero)
                                 {
-                                    inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+
+                                    List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+
+
+                                    foreach (InventoryBase bas in folders)
+                                    {
+                                        inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
+                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                    }
                                 }
 
                                 X.ActualQueue.Remove(Recipient);
@@ -229,12 +239,13 @@ namespace OpenCollarBot.ScriptImporter
                             {
                                 X.ActualQueue[Recipient] = kvp.Value;
                             }
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
+                            if(Recipient!=UUID.Zero)
+                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
                         }
                     }else
                     {
-
-                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
+                        if(Recipient!=UUID.Zero)
+                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
                     }
                 } else if(itemType == AssetType.Notecard)
                 {
@@ -253,23 +264,31 @@ namespace OpenCollarBot.ScriptImporter
                         if (kvp.Value.Count == 0)
                         {
                             X.ActualQueue.Remove(Recipient);
-//                            inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
-                            List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30).Milliseconds);
+                            //                            inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
+                            
+                            if (Recipient != UUID.Zero)
+                            {
 
-                            foreach(InventoryBase bas in folders){
-                                inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+
+
+                                foreach (InventoryBase bas in folders)
+                                {
+                                    inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
+                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                }
                             }
                         }
                         else
                         {
                             X.ActualQueue[Recipient] = kvp.Value;
                         }
-                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
+                        if(Recipient != UUID.Zero)
+                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
                     }else
                     {
-
-                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
+                        if(Recipient!=UUID.Zero)
+                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
                     }
                 }
             } else
@@ -283,12 +302,17 @@ namespace OpenCollarBot.ScriptImporter
                         kvp.Value.Remove(QT);
                         if (kvp.Value.Count == 0)
                         {
-                            List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30).Milliseconds);
-
-                            foreach (InventoryBase bas in folders)
+                            if (Recipient != UUID.Zero)
                             {
-                                inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+
+                                List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+
+
+                                foreach (InventoryBase bas in folders)
+                                {
+                                    inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
+                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                }
                             }
                             X.ActualQueue.Remove(Recipient);
                             //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
@@ -296,7 +320,8 @@ namespace OpenCollarBot.ScriptImporter
                         {
                             X.ActualQueue[Recipient] = kvp.Value;
                         }
-                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing - no changes needed");
+                        if(Recipient!=UUID.Zero)
+                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing - no changes needed");
 
                     } else
                     {
@@ -319,12 +344,17 @@ namespace OpenCollarBot.ScriptImporter
                                 kvp.Value.Remove(QT);
                                 if(kvp.Value.Count == 0)
                                 {
-                                    List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30).Milliseconds);
-
-                                    foreach (InventoryBase bas in folders)
+                                    if (Recipient != UUID.Zero)
                                     {
-                                        inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+
+                                        List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+
+
+                                        foreach (InventoryBase bas in folders)
+                                        {
+                                            inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
+                                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                        }
                                     }
                                     X.ActualQueue.Remove(Recipient);
                                     //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
@@ -333,12 +363,13 @@ namespace OpenCollarBot.ScriptImporter
                                 {
                                     X.ActualQueue[Recipient] = kvp.Value;
                                 }
-                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
+                                if(Recipient!=UUID.Zero)
+                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
                             }
                         } else
                         {
-
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
+                            if(Recipient!=UUID.Zero)
+                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
                         }
                         
 
@@ -350,12 +381,17 @@ namespace OpenCollarBot.ScriptImporter
                         kvp.Value.Remove(QT);
                         if (kvp.Value.Count == 0)
                         {
-                            List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30).Milliseconds);
-
-                            foreach (InventoryBase bas in folders)
+                            if (Recipient != UUID.Zero)
                             {
-                                inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+
+                                List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+
+
+                                foreach (InventoryBase bas in folders)
+                                {
+                                    inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
+                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                }
                             }
                             X.ActualQueue.Remove(Recipient);
                             //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
@@ -364,8 +400,8 @@ namespace OpenCollarBot.ScriptImporter
                         {
                             X.ActualQueue[Recipient] = kvp.Value;
                         }
-
-                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing - no changes needed");
+                        if(Recipient!=UUID.Zero)
+                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing - no changes needed");
                     }
                     else
                     {
@@ -384,12 +420,17 @@ namespace OpenCollarBot.ScriptImporter
                             kvp.Value.Remove(QT);
                             if (kvp.Value.Count == 0)
                             {
-                                List<InventoryBase> folders = inv.FolderContents(Branch, BotSession.Instance.grid.Self.AgentID, true, false, InventorySortOrder.ByName, TimeSpan.FromSeconds(30).Milliseconds);
-
-                                foreach (InventoryBase bas in folders)
+                                if (Recipient != UUID.Zero)
                                 {
-                                    inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+
+                                    List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+
+
+                                    foreach (InventoryBase bas in folders)
+                                    {
+                                        inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
+                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                    }
                                 }
                                 X.ActualQueue.Remove(Recipient);
                                 //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
@@ -398,11 +439,13 @@ namespace OpenCollarBot.ScriptImporter
                             {
                                 X.ActualQueue[Recipient] = kvp.Value;
                             }
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
+                            if(Recipient!=UUID.Zero)
+                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
                             
                         } else
                         {
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
+                            if(Recipient!=UUID.Zero)
+                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
                         }
                     }
                 }

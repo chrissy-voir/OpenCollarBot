@@ -81,7 +81,7 @@ namespace OpenCollarBot.ScriptImporter
 
                 try
                 {
-                    hwr = (HttpWebRequest)HttpWebRequest.Create("https://raw.githubusercontent.com/" + GitOwner + "/OpenCollar/master/src/"+kvp.Value.Container+"/"+kvp.Value.ScriptName+kvp.Value.FileExt);
+                    hwr = (HttpWebRequest)HttpWebRequest.Create("https://raw.githubusercontent.com/" + GitOwner + "/OpenCollar/"+GitBranch+"/src/"+kvp.Value.Container+"/"+kvp.Value.ScriptName+kvp.Value.FileExt);
 
                     hwr.Method = "GET";
                     hwresp = (HttpWebResponse)hwr.GetResponse();
@@ -98,9 +98,10 @@ namespace OpenCollarBot.ScriptImporter
                     // Get the file text and add to queued items
                     StreamReader sr = new StreamReader(hwresp.GetResponseStream());
                     QT.Text = sr.ReadToEnd();
-                    Console.WriteLine("Generating ZHX for string with length : "+QT.Text.Length.ToString());
-                    QT.Hash = Tools.ZHX(QT.Text);
-                    Console.WriteLine("ZHX [" + QT.Name + "] : " + QT.Hash);
+                    //Console.WriteLine("Generating ZHX for string with length : "+QT.Text.Length.ToString());
+                    Console.WriteLine("MD5 [" + QT.Name + "] : " + Tools.MD5Hash(QT.Text));
+                    QT.Hash = Tools.MD5Hash(QT.Text);
+                    //Console.WriteLine("ZHX [" + QT.Name + "] : " + QT.Hash);
                     QT.GitBranch = GitBranch;
                     QT.Container = kvp.Value.Container;
                     QT.ItemType = kvp.Value.Type;

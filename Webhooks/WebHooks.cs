@@ -7,6 +7,7 @@ Licensed under the GPLv2
 
 using Bot;
 using Bot.CommandSystem;
+using OpenMetaverse;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -23,6 +24,7 @@ namespace OpenCollarBot.Webhooks
             WebhookRegistry.HTTPResponseData reply = new WebhookRegistry.HTTPResponseData();
             reply.ReplyString = "Done";
             reply.Status = 200;
+            CommandRegistry.Instance.RunCommand("refresh_git_nosend", UUID.Zero, 1000, BotSession.Instance.MHE, MessageHandler.Destinations.DEST_ACTION, UUID.Zero, "Console");
             return reply;
         }
 
