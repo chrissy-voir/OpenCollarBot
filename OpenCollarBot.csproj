@@ -13,6 +13,12 @@
     <None Remove="libremetaverse\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Core5\**" />
+    <EmbeddedResource Remove="Core5\**" />
+    <None Remove="Core5\**" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\OCB</OutputPath>
   </PropertyGroup>
