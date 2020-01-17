@@ -106,19 +106,9 @@ namespace OpenCollarBot.Webhooks
         public HTTPResponseData RunCommand(string path, string body, NameValueCollection headers, string method)
         {
             // Run the command then return the response string from the server
-            MethodInfo fnc = null;
-            foreach(KeyValuePair<string, WebhookAttribs> kvp in hooks)
-            {
-                if(kvp.Value.Path.ToLower() == path.ToLower())
-                {
-                    fnc = kvp.Value.AssignedMethod;
-                }
-            }
             HTTPResponseData NotFound = new HTTPResponseData();
             NotFound.ReplyString = "More water is required!";
             NotFound.Status = 418;
-            if (fnc == null) return NotFound;
-            object obj = Activator.CreateInstance(fnc.DeclaringType);
             //HTTPResponseData hrd = (HTTPResponseData)fnc.Invoke(obj, new object[] { body, headers });
             // 
             HTTPResponseData hrd = NotFound;
