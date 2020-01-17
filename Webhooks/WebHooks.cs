@@ -17,8 +17,8 @@ namespace OpenCollarBot.Webhooks
 {
     class WebHooks
     {
-        [WebhookAttribs("/git")]
-        public WebhookRegistry.HTTPResponseData gitHook(string body, NameValueCollection headers)
+        [WebhookAttribs("/git", HTTPMethod = "POST")]
+        public WebhookRegistry.HTTPResponseData gitHook(List<string> arguments, string body, string method, NameValueCollection headers)
         {
             GitCommands.Process(body, headers.Get("X-Github-Event"), BotSession.Instance.MHE);
             WebhookRegistry.HTTPResponseData reply = new WebhookRegistry.HTTPResponseData();
@@ -28,8 +28,8 @@ namespace OpenCollarBot.Webhooks
             return reply;
         }
 
-        [WebhookAttribs("/eject_notification")]
-        public WebhookRegistry.HTTPResponseData ejectnotif(string body, NameValueCollection headers)
+        [WebhookAttribs("/eject_notification", HTTPMethod = "POST")]
+        public WebhookRegistry.HTTPResponseData ejectnotif(List<string> arguments, string body, string method, NameValueCollection headers)
         {
             string[] splitter = body.Split(new[] { '[', ']' });
             string req = "[" + splitter[1] + "]" + splitter[2];
@@ -53,7 +53,7 @@ namespace OpenCollarBot.Webhooks
         }
 
         [WebhookAttribs("/help")]
-        public WebhookRegistry.HTTPResponseData showHelp(string body, NameValueCollection headers)
+        public WebhookRegistry.HTTPResponseData showHelp(List<string> arguments, string body, string method, NameValueCollection headers)
         {
             WebhookRegistry.HTTPResponseData httpReply = new WebhookRegistry.HTTPResponseData();
             CommandRegistry reg = CommandRegistry.Instance;

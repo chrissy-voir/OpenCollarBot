@@ -5,7 +5,8 @@ using System.IO;
 using Bot.CommandSystem;
 using Bot;
 using OpenMetaverse;
-
+using OpenCollarBot.Webhooks;
+using System.Collections.Specialized;
 
 namespace OpenCollarBot
 {
@@ -77,7 +78,8 @@ namespace OpenCollarBot
                             {
                                 if (S.Contains(V, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    MHE(source, client, "{"+onlyName+"} "+S);
+                                    
+                                    MHE(source, client, "{[http://xsinode.net:35591/viewlog/"+Uri.EscapeUriString(onlyName)+" "+onlyName+"]} "+S);
                                 }
                             }
                         }
@@ -91,6 +93,47 @@ namespace OpenCollarBot
             MHE(source, client, ".\n \n[Search Completed]");
         }
 
+        [WebhookAttribs("/viewlog/%", HTTPMethod = "GET")]
+        public WebhookRegistry.HTTPResponseData View_Log(List<string> arguments, string body, string method, NameValueCollection headers)
+        {
+            WebhookRegistry.HTTPResponseData rd = new WebhookRegistry.HTTPResponseData();
 
+            string FinalOutput = "";
+            lock (_fileRead)
+            {
+                try
+                {
+
+                    foreach (string s in File.ReadLines("GroupChatLogs/" + arguments[0] + ".log"))
+                    {
+                        string tmp = s;
+                        string[] Ltmp = tmp.Split(' ');
+                        tmp = "";
+                        foreach(string K in Ltmp)
+                        {
+                            if (K.StartsWith("secondlife://"))
+                            {
+                                // DO NOT ADD TO OUTPUT
+                            }
+                            else
+                            {
+                                tmp += K + " ";
+                            }
+                        }
+
+                        FinalOutput += tmp+"<br/>";
+
+                    }
+                    rd.Status = 200;
+                    rd.ReplyString = FinalOutput;
+                } catch(Exception e)
+                {
+                    rd.Status = 418;
+                    rd.ReplyString = "You burned... the tea";
+                }
+            }
+
+            return rd;
+        }
     }
 }

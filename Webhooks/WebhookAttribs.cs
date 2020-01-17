@@ -16,6 +16,7 @@ namespace OpenCollarBot.Webhooks
     {
         public string Path = "";
         public MethodInfo AssignedMethod = null;
+        public string HTTPMethod = "GET";
         public WebhookAttribs(string WebPath)
         {
             Path = WebPath;

@@ -525,13 +525,13 @@ namespace OpenCollarBot
             RequestLog.HTTPData HD = new RequestLog.HTTPData();
             string CustomReplyStr = "";
 
-            WebhookRegistry.HTTPResponseData reply = WebhookRegistry.Instance.RunCommand(RequestPath, Response, CTX.Request.Headers);
+            WebhookRegistry.HTTPResponseData reply = WebhookRegistry.Instance.RunCommand(RequestPath, Response, CTX.Request.Headers, CTX.Request.HttpMethod);
 
 
             CustomReplyStr = reply.ReplyString;
             byte[] buffer = Encoding.UTF8.GetBytes("\n" + CustomReplyStr);
             CTX.Response.ContentLength64 = buffer.Length;
-            CTX.Response.AddHeader("Server", "1.5");
+            CTX.Response.AddHeader("Server", "1.6");
             CTX.Response.StatusCode = reply.Status;
             Stream output = CTX.Response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
