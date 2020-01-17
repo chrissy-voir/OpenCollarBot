@@ -533,6 +533,10 @@ namespace OpenCollarBot
             CTX.Response.ContentLength64 = buffer.Length;
             CTX.Response.AddHeader("Server", "1.6");
             CTX.Response.StatusCode = reply.Status;
+            if(reply.ReturnContentType!= "" && reply.ReturnContentType != null)
+            {
+                CTX.Response.ContentType = reply.ReturnContentType;
+            }
             Stream output = CTX.Response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
             output.Close();

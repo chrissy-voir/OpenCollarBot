@@ -117,6 +117,7 @@ namespace OpenCollarBot.Webhooks
 
             httpReply.ReplyString = Final;
             httpReply.Status = 200;
+            httpReply.ReturnContentType = "text/html";
 
             return httpReply;
         }

@@ -126,6 +126,7 @@ namespace OpenCollarBot
                     }
                     rd.Status = 200;
                     rd.ReplyString = FinalOutput;
+                    rd.ReturnContentType = "text/html";
                 } catch(Exception e)
                 {
                     rd.Status = 418;

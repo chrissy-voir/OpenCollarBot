@@ -197,6 +197,7 @@ namespace OpenCollarBot.Webhooks
         {
             public int Status;
             public string ReplyString;
+            public string ReturnContentType;
         }
     }
 }
