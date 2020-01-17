@@ -70,6 +70,11 @@ namespace OpenCollarBot
             {
                 agentKey = fromID;
                 fromID = sessID;
+
+                // Initiate group log saver
+                string GroupName = client.Groups.GroupName2KeyCache[fromID];
+
+                GroupLog.Instance.WriteLogEntry(GroupName, request);
             }
             else { agentKey = fromID; }
 
