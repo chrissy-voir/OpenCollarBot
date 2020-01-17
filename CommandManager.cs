@@ -66,6 +66,7 @@ namespace OpenCollarBot
             else if (parameters.type == "im") sourceLoc = MessageHandler.Destinations.DEST_AGENT;
             else sourceLoc = MessageHandler.Destinations.DEST_LOCAL;
 
+            string agentName = parameters.fromName;
             if (sourceLoc == MessageHandler.Destinations.DEST_GROUP)
             {
                 agentKey = fromID;
@@ -74,11 +75,10 @@ namespace OpenCollarBot
                 // Initiate group log saver
                 string GroupName = client.Groups.GroupName2KeyCache[fromID];
 
-                GroupLog.Instance.WriteLogEntry(GroupName, request);
+                GroupLog.Instance.WriteLogEntry(GroupName,"secondlife:///app/agent/"+agentKey.ToString()+"/about ("+ agentName+") : "+request);
             }
             else { agentKey = fromID; }
 
-            string agentName = parameters.fromName;
             if (request.Substring(0, 1) != "!")
             {
                 // Check if active bug or feature report session. If not- return.
