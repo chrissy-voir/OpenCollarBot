@@ -104,7 +104,7 @@ namespace OpenCollarBot
                 try
                 {
 
-                    foreach (string s in File.ReadLines("GroupChatLogs/" + arguments[0] + ".log"))
+                    foreach (string s in File.ReadLines("GroupChatLogs/" + Uri.UnescapeDataString(arguments[0]) + ".log"))
                     {
                         string tmp = s;
                         string[] Ltmp = tmp.Split(' ');
