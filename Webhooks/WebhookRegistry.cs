@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace OpenCollarBot.Webhooks
 {
@@ -179,31 +181,26 @@ namespace OpenCollarBot.Webhooks
                     // Run the method
                     Console.WriteLine("Running: " + zAPIPath.Path + "; " + zAPIPath.AssignedMethod.Name + "; For inbound: " + path);
                     object _method = Activator.CreateInstance(zAPIPath.AssignedMethod.DeclaringType);
-                    _ReplyData = (ReplyData)zAPIPath.AssignedMethod.Invoke(_method, new object[] { arguments, body, method, headers });
+                    hrd = (HTTPResponseData)zAPIPath.AssignedMethod.Invoke(_method, new object[] { arguments, body, method, headers });
 
-                    Console.WriteLine("====> " + _ReplyData.Body);
+//                    Console.WriteLine("====> " + hrd.ReplyString);
 
-                    return _ReplyData;
+                    return hrd;
                 }
             }
             // an API Path wasn't found
             // check the filesystem
-            string[] noArgPath = rawURL.Split(new[] { '?' });
+            string[] noArgPath = path.Split(new[] { '?' });
             if (File.Exists($"htdocs/{noArgPath[0]}"))  // This will provide a way to display HTML to the user. If the server must process data internally, please use a method & attribute. Nothing is stopping you from also loading in a HTML/js file and returning a stylized response.
             {
-                _ReplyData.Status = 200;
-                _ReplyData.Body = File.ReadAllText($"htdocs/{noArgPath[0]}");
+                hrd.Status = 200;
+                hrd.ReplyString = File.ReadAllText($"htdocs/{noArgPath[0]}");
                 Dictionary<string, string> customHeaders = null; // This is mainly going to be used in instances where the domain-server needs a document but CORS isnt set
-                if (File.Exists($"htdocs/{noArgPath[0]}.headers"))
-                    customHeaders = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText($"htdocs/{noArgPath[0]}.headers"));
-
-                if (customHeaders != null)
-                    _ReplyData.CustomOutputHeaders = customHeaders;
+                
 
 
             }
-            Console.WriteLine(consoleoutput); // <--- We only echo on a not_found as this could get messy otherwise... 
-            return _ReplyData;
+            return hrd;
         }
 
         public struct HTTPResponseData
