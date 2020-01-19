@@ -53,12 +53,12 @@ namespace OpenCollarBot
 
         private static readonly object _fileRead = new object();
         [CommandGroupMaster("Logging")]
-        [CommandGroup("search_log", 5, 2, "search_log [uuid] [search_term]  -  Searches for the search term in all logs relating to the group uuid. The search term may also include the pipe (|) delimiter to include more than 1 word.", Bot.MessageHandler.Destinations.DEST_AGENT| Bot.MessageHandler.Destinations.DEST_LOCAL)]
+        [CommandGroup("search_log", 5, 2, "search_log [groupName] [search_term]  -  Searches for the search term in all logs relating to the group name (Use a underscore to show where spaces are!). The search term may also include the pipe (|) delimiter to include more than 1 word.", Bot.MessageHandler.Destinations.DEST_AGENT| Bot.MessageHandler.Destinations.DEST_LOCAL)]
         public void search_log(UUID client, int level, GridClient grid, string[] additionalArgs,
                                 SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
                                 CommandRegistry registry, UUID agentKey, string agentName)
         {
-            string GrpName = grid.Groups.GroupName2KeyCache[UUID.Parse(additionalArgs[0])];
+            string GrpName = additionalArgs[0].Replace('_', ' ');
             string[] search = additionalArgs[1].Split('|');
 
             DirectoryInfo di = new DirectoryInfo("GroupChatLogs");
@@ -135,6 +135,22 @@ namespace OpenCollarBot
             }
 
             return rd;
+        }
+
+        [WebhookAttribs("/logs", HTTPMethod = "GET")]
+        public WebhookRegistry.HTTPResponseData List_Logs(List<string> arguments, string body, string method, NameValueCollection headers)
+        {
+            WebhookRegistry.HTTPResponseData hrd = new WebhookRegistry.HTTPResponseData();
+            hrd.Status = 200;
+            hrd.ReplyString = "<center><h2>Group Chat Logs</h2></center>";
+            DirectoryInfo di = new DirectoryInfo("GroupChatLogs");
+            foreach(FileInfo fi in di.GetFiles())
+            {
+                hrd.ReplyString += "<br/><a href='/viewlog/"+Path.GetFileNameWithoutExtension(fi.Name)+"'> " + fi.Name + "</a>";
+            }
+            hrd.ReturnContentType = "text/html";
+
+            return hrd;
         }
     }
 }
