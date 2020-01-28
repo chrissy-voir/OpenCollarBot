@@ -217,11 +217,11 @@ namespace OpenCollarBot
 
             client.Self.ScriptDialog += onScriptDialog;
         }
-        public struct ScriptDialogSession
+        public class ScriptDialogSession
         {
-            public UUID ObjectKey;
+            public UUID ObjectKey = UUID.Zero;
             public string DialogPrompt;
-            public List<string> Buttons;
+            public List<string> Buttons=new List<string>();
             public string ObjectName;
             public int ReplyChannel;
         }
@@ -234,7 +234,7 @@ namespace OpenCollarBot
             SDS.ObjectName = e.ObjectName;
             SDS.ReplyChannel = e.Channel;
             string[] Blocks = SDS.ObjectKey.ToString().Split(new[] { '-' });
-            int Block2 = Convert.ToInt32("0x"+Blocks[1]);
+            int Block2 = Convert.ToInt32("0x"+Blocks[1], 16);
             Block2 -= SDS.ReplyChannel;
 
             OCBSession.Instance.ScriptSessions.Add(Block2, SDS);
@@ -243,17 +243,15 @@ namespace OpenCollarBot
             int index = 0;
             foreach(string S in e.ButtonLabels)
             {
+                BTNStr += index.ToString()+". "+S + "\n";
+
                 index++;
-                BTNStr += index.ToString()+". "+S + ", ";
                 
             }
 
-            if(BTNStr.EndsWith(", "))
-            {
-                BTNStr = BTNStr.Substring(0, BTNStr.Length - 2);
-            }
             BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, e.OwnerID, $"Hi! I got this script dialog: \n \nDialogID: {Block2}\nChannel: {SDS.ReplyChannel}\nPrompt: {SDS.DialogPrompt}\nButtons: {BTNStr}\n \n[To respond to this dialog use the !reply_prompt command]");
-            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, e.OwnerID, $"Note: When responding to the dialog, please use the button IDs infront of the labels, not the actual label!");
+            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, e.OwnerID, $"Note: When responding to the dialog, please use the button IDs infront of the labels, not the actual label!\nFor example: !reply_prompt {Block2} 0");
+            
         }
 
         private void On_NewInventoryOffer(object sender, InventoryObjectOfferedEventArgs e)

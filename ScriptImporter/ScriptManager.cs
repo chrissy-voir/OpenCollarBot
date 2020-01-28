@@ -125,7 +125,15 @@ namespace OpenCollarBot.ScriptImporter
             int ButtonNum = Convert.ToInt32(additionalArgs[1]);
 
             // Get the scriptsession
+
+            if (OCBSession.Instance.ScriptSessions.ContainsKey(DialogID) == false)
+            {
+                MHE(source, client, "No such dialog ID");
+                return;
+            }
             Program.ScriptDialogSession SDS = OCBSession.Instance.ScriptSessions[DialogID];
+
+            
 
             BotSession.Instance.grid.Self.ReplyToScriptDialog(SDS.ReplyChannel, ButtonNum, SDS.Buttons[ButtonNum], SDS.ObjectKey);
 
