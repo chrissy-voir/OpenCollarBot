@@ -26,6 +26,7 @@ namespace OpenCollarBot.ScriptImporter
         {
             get
             {
+                if (_i != null) return _i;
                 lock (locks)
                 {
                     if (_i == null)
@@ -49,11 +50,19 @@ namespace OpenCollarBot.ScriptImporter
             public string FileExt; // used for notecard
         }
 
+        public class FinalQueueData
+        {
+            // Final Queue
+            // We should put stuff like... The folder UUIDs in here.
+            public Dictionary<string, UUID> Folders = new Dictionary<string, UUID>();
+        }
+
         //        public List<QueueType> QueuedUpdates = new List<QueueType>();
         // Dictionary will hold the script path, and a import flag object
         public AutoResetEvent ARE = new AutoResetEvent(false);
         public InventoryItem invItem = null;
         public bool UploadSuccess;
+        public Dictionary<UUID, FinalQueueData> FinalQueue = new Dictionary<UUID, FinalQueueData>();
         public bool CompileSuccess;
         public List<string> compileMessages;
         public Dictionary<UUID, List<QueueType>> ActualQueue = new Dictionary<UUID,List<QueueType>>();
@@ -125,6 +134,23 @@ namespace OpenCollarBot.ScriptImporter
             if(Container == UUID.Zero || Container == ParentFolder)
             {
                 Container = inv.CreateFolder(Branch, QT.Container);
+            }
+
+            Queue.FinalQueueData Finals = new Queue.FinalQueueData();
+            Dictionary<UUID, Queue.FinalQueueData> FQI = Queue.Instance.FinalQueue;
+            if (FQI.ContainsKey(Recipient))
+            {
+                Finals = FQI[Recipient];
+                if (Finals.Folders.ContainsKey(QT.Container))
+                {
+                    // do nothing
+                }
+                else
+                {
+                    Finals.Folders.Add(QT.Container, Container);
+                }
+                FQI[Recipient] = Finals;
+                Queue.Instance.FinalQueue = FQI;
             }
 
             Console.WriteLine("Git Owner Folder: "+GitOwnerFolder.ToString());
@@ -222,14 +248,12 @@ namespace OpenCollarBot.ScriptImporter
 
                                 if (Recipient != UUID.Zero)
                                 {
+                                    Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
 
-                                    List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
-
-
-                                    foreach (InventoryBase bas in folders)
+                                    foreach (KeyValuePair<string,UUID> kvpx in Finals.Folders)
                                     {
-                                        inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                        inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
+                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                     }
                                 }
 
@@ -269,13 +293,12 @@ namespace OpenCollarBot.ScriptImporter
                             if (Recipient != UUID.Zero)
                             {
 
-                                List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+                                Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
 
-
-                                foreach (InventoryBase bas in folders)
+                                foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
-                                    inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                    inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
+                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
                             }
                         }
@@ -305,13 +328,12 @@ namespace OpenCollarBot.ScriptImporter
                             if (Recipient != UUID.Zero)
                             {
 
-                                List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+                                Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
 
-
-                                foreach (InventoryBase bas in folders)
+                                foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
-                                    inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                    inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
+                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
                             }
                             X.ActualQueue.Remove(Recipient);
@@ -347,13 +369,12 @@ namespace OpenCollarBot.ScriptImporter
                                     if (Recipient != UUID.Zero)
                                     {
 
-                                        List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+                                        Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
 
-
-                                        foreach (InventoryBase bas in folders)
+                                        foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                         {
-                                            inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                            inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
+                                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                         }
                                     }
                                     X.ActualQueue.Remove(Recipient);
@@ -384,13 +405,12 @@ namespace OpenCollarBot.ScriptImporter
                             if (Recipient != UUID.Zero)
                             {
 
-                                List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+                                Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
 
-
-                                foreach (InventoryBase bas in folders)
+                                foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
-                                    inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                    inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
+                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
                             }
                             X.ActualQueue.Remove(Recipient);
@@ -423,13 +443,12 @@ namespace OpenCollarBot.ScriptImporter
                                 if (Recipient != UUID.Zero)
                                 {
 
-                                    List<InventoryBase> folders = inv.LocalFind(Branch, new[] { "" }, 0, false);
+                                    Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
 
-
-                                    foreach (InventoryBase bas in folders)
+                                    foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                     {
-                                        inv.GiveFolder(bas.UUID, bas.Name, Recipient, false);
-                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + bas.Name);
+                                        inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
+                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                     }
                                 }
                                 X.ActualQueue.Remove(Recipient);

@@ -21,7 +21,7 @@ using OpenCollarBot.GroupCommands;
 
 namespace OpenCollarBot
 {
-    class Program : IProgram
+    public class Program : IProgram
     {
         public GridClient grid;
         public CommandManager CM = null;
@@ -161,7 +161,8 @@ namespace OpenCollarBot
                     args.Add("fromName", e.IM.FromAgentName);
                     passArguments(JsonConvert.SerializeObject(args));
                 }
-            }
+            } 
+            
         }
 
         public void passArguments(string data)
@@ -213,6 +214,46 @@ namespace OpenCollarBot
                 }
             }
 
+
+            client.Self.ScriptDialog += onScriptDialog;
+        }
+        public struct ScriptDialogSession
+        {
+            public UUID ObjectKey;
+            public string DialogPrompt;
+            public List<string> Buttons;
+            public string ObjectName;
+            public int ReplyChannel;
+        }
+        private void onScriptDialog(object sender, ScriptDialogEventArgs e)
+        {
+            ScriptDialogSession SDS = new ScriptDialogSession();
+            SDS.ObjectKey = e.ObjectID;
+            SDS.DialogPrompt = e.Message;
+            SDS.Buttons = e.ButtonLabels;
+            SDS.ObjectName = e.ObjectName;
+            SDS.ReplyChannel = e.Channel;
+            string[] Blocks = SDS.ObjectKey.ToString().Split(new[] { '-' });
+            int Block2 = Convert.ToInt32("0x"+Blocks[1]);
+            Block2 -= SDS.ReplyChannel;
+
+            OCBSession.Instance.ScriptSessions.Add(Block2, SDS);
+            string BTNStr = "";
+
+            int index = 0;
+            foreach(string S in e.ButtonLabels)
+            {
+                index++;
+                BTNStr += index.ToString()+". "+S + ", ";
+                
+            }
+
+            if(BTNStr.EndsWith(", "))
+            {
+                BTNStr = BTNStr.Substring(0, BTNStr.Length - 2);
+            }
+            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, e.OwnerID, $"Hi! I got this script dialog: \n \nDialogID: {Block2}\nChannel: {SDS.ReplyChannel}\nPrompt: {SDS.DialogPrompt}\nButtons: {BTNStr}\n \n[To respond to this dialog use the !reply_prompt command]");
+            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, e.OwnerID, $"Note: When responding to the dialog, please use the button IDs infront of the labels, not the actual label!");
         }
 
         private void On_NewInventoryOffer(object sender, InventoryObjectOfferedEventArgs e)

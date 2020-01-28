@@ -64,7 +64,7 @@ namespace OpenCollarBot
         public void resave(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
-            if (File.Exists("OpenCollarBot.bdf")) File.Delete("OpenCollarBot.bdf");
+            if (File.Exists("OpenCollarBot.json")) File.Delete("OpenCollarBot.json");
             ocb.Save();
         }
 
@@ -113,20 +113,14 @@ namespace OpenCollarBot
             UUID sendTo = UUID.Zero;
             if (additionalArgs.Length == 1) sendTo = UUID.Parse(additionalArgs[0]);
 
-            OCGroupCaches groupCache = OCGroupCaches.Reload("GroupCache/" + groupID.ToString());
-
-            foreach (OCGroupCaches.GroupMemoryData gmd in groupCache.GMD)
+            if (sendTo == UUID.Zero) return;
+            else
             {
-                if (gmd.RoleName == "Everyone")
-                {
-                    // Found!
-                    List<UUID> role = new List<UUID>();
-                    role.Add(gmd.roleID);
-                    grid.Groups.Invite(groupID, role, sendTo);
+                List<UUID> role = new List<UUID>();
+                role.Add(UUID.Zero);
+                grid.Groups.Invite(groupID, role, sendTo);
 
-                    MHE(source, client, "I sent the group invite");
-                    return;
-                }
+                MHE(source, client, "Sent the invite");
             }
         }
 
@@ -146,19 +140,11 @@ namespace OpenCollarBot
 
                 grid.Groups.RequestGroupRoles(groupID);
             }
-            gc = OCGroupCaches.Reload(groupID.ToString());
+            List<UUID> roles = new List<UUID>();
+            roles.Add(UUID.Zero);
+            grid.Groups.Invite(groupID, roles, user);
 
-            foreach (OCGroupCaches.GroupMemoryData gmd in gc.GMD)
-            {
-                if (gmd.RoleName == "Everyone")
-                {
-                    List<UUID> roleID = new List<UUID>();
-                    roleID.Add(gmd.roleID);
-                    grid.Groups.Invite(groupID, roleID, user);
-                    MHE(source, client, "Invited");
-                    return;
-                }
-            }
+            MHE(source, client, "Invitation sent!");
 
         }
 

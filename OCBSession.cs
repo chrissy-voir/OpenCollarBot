@@ -1,7 +1,7 @@
 ﻿/*
 
 Copyright © 2019 Tara Piccari (Aria; Tashia Redrose)
-Licensed under the GPLv2
+Licensed under the AGPLv3
 
 */
 
@@ -33,6 +33,8 @@ namespace OpenCollarBot
 
 
 
-        
+        // This file is for volatile information. 
+        // If we do not care about it persisting, it will be stored here!
+        public Dictionary<int, Program.ScriptDialogSession> ScriptSessions = new Dictionary<int, Program.ScriptDialogSession>();
     }
 }

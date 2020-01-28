@@ -113,5 +113,23 @@ namespace OpenCollarBot.ScriptImporter
 
             inst.ActualQueue.Add(Requester, Queued);
         }
+
+
+
+        [CommandGroup("reply_prompt", 0, 2, "reply_prompt [int:PromptID] [int:ButtonNumber]", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
+        public void dialog_reply(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "Responding..");
+
+            int DialogID = Convert.ToInt32(additionalArgs[0]);
+            int ButtonNum = Convert.ToInt32(additionalArgs[1]);
+
+            // Get the scriptsession
+            Program.ScriptDialogSession SDS = OCBSession.Instance.ScriptSessions[DialogID];
+
+            BotSession.Instance.grid.Self.ReplyToScriptDialog(SDS.ReplyChannel, ButtonNum, SDS.Buttons[ButtonNum], SDS.ObjectKey);
+
+            OCBSession.Instance.ScriptSessions.Remove(DialogID);
+        }
     }
 }

@@ -16,7 +16,7 @@ using OpenCollarBot.GroupCommands;
 
 namespace OpenCollarBot
 {
-    class CommandManager
+    public class CommandManager
     {
         public CommandRegistry register;
         public OCBotMemory mem;
