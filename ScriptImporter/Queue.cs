@@ -163,9 +163,9 @@ namespace OpenCollarBot.ScriptImporter
             try
             {
                 if (QT.ItemType == "script")
-                    importedItem = inv.LocalFind(Container, new[] { QT.Name }, 0, true).First();
+                    importedItem = inv.LocalFind(Container, new[] { QT.Name }, 1, true).First();
                 else if (QT.ItemType == "notecard")
-                    importedItem = inv.LocalFind(Container, new[] { QT.Name + QT.FileExt }, 0, false).First();
+                    importedItem = inv.LocalFind(Container, new[] { QT.Name + QT.FileExt }, 1, false).First();
                 ItemID = importedItem.UUID;
             }
             catch (Exception e) { }
@@ -248,13 +248,13 @@ namespace OpenCollarBot.ScriptImporter
 
                                 if (Recipient != UUID.Zero)
                                 {
-                                    Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
 
                                     foreach (KeyValuePair<string,UUID> kvpx in Finals.Folders)
                                     {
                                         inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
                                         BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                     }
+                                    Queue.Instance.FinalQueue.Remove(Recipient);
                                 }
 
                                 X.ActualQueue.Remove(Recipient);
@@ -293,13 +293,12 @@ namespace OpenCollarBot.ScriptImporter
                             if (Recipient != UUID.Zero)
                             {
 
-                                Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
-
                                 foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
                                     inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
                                     BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
+                                Queue.Instance.FinalQueue.Remove(Recipient);
                             }
                         }
                         else
@@ -327,14 +326,12 @@ namespace OpenCollarBot.ScriptImporter
                         {
                             if (Recipient != UUID.Zero)
                             {
-
-                                Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
-
                                 foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
                                     inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
                                     BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
+                                Queue.Instance.FinalQueue.Remove(Recipient);
                             }
                             X.ActualQueue.Remove(Recipient);
                             //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
@@ -369,13 +366,12 @@ namespace OpenCollarBot.ScriptImporter
                                     if (Recipient != UUID.Zero)
                                     {
 
-                                        Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
-
                                         foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                         {
                                             inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
                                             BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                         }
+                                        Queue.Instance.FinalQueue.Remove(Recipient);
                                     }
                                     X.ActualQueue.Remove(Recipient);
                                     //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
@@ -405,13 +401,12 @@ namespace OpenCollarBot.ScriptImporter
                             if (Recipient != UUID.Zero)
                             {
 
-                                Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
-
                                 foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
                                     inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
                                     BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
+                                Queue.Instance.FinalQueue.Remove(Recipient);
                             }
                             X.ActualQueue.Remove(Recipient);
                             //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
@@ -442,14 +437,12 @@ namespace OpenCollarBot.ScriptImporter
                             {
                                 if (Recipient != UUID.Zero)
                                 {
-
-                                    Dictionary<UUID, Queue.FinalQueueData> finals = Queue.Instance.FinalQueue;
-
                                     foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                     {
                                         inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
                                         BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                     }
+                                    Queue.Instance.FinalQueue.Remove(Recipient);
                                 }
                                 X.ActualQueue.Remove(Recipient);
                                 //inv.GiveFolder(Branch, GitBranchBase.Name, Recipient, false);
