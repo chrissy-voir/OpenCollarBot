@@ -79,7 +79,7 @@ namespace OpenCollarBot
                                 if (S.Contains(V, StringComparison.OrdinalIgnoreCase))
                                 {
                                     
-                                    MHE(source, client, "{[http://xsinode.net:35591/viewlog/"+Uri.EscapeUriString(onlyName)+" "+onlyName+"]} "+S);
+                                    MHE(source, client, "{[https://zontreck.dev:35591/viewlog/"+Uri.EscapeUriString(onlyName)+" "+onlyName+"]} "+S);
                                 }
                             }
                         }

@@ -32,7 +32,7 @@ namespace OpenCollarBot.Git
 
         public float ProgramVersion
         {
-            get { return 1.5f; }
+            get { return 1.6f; }
         }
 
         public string getTick()
@@ -60,7 +60,8 @@ namespace OpenCollarBot.Git
             {
                 listener = new HttpListener();
                 MHEx = MH.callbacks;
-                listener.Prefixes.Add("http://*:35591/");
+                listener.Prefixes.Add("https://*:35591/");
+                
                 listener.Start();
                 GC = new GitCommands(listener, MH.callbacks);
                 listener.BeginGetContext(GC.OnWebHook, null);
