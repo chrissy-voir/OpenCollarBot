@@ -220,6 +220,69 @@ namespace OpenCollarBot
 
         }
 
+        private Dictionary<UUID, Group> GroupsCache = null;
+        private ManualResetEvent GroupsEvent = new ManualResetEvent(false);
+        private ManualResetEvent RoleReply = new ManualResetEvent(false);
+        private void Groups_CurrentGroups(object sender, CurrentGroupsEventArgs e)
+        {
+            if (null == GroupsCache)
+                GroupsCache = e.Groups;
+            else
+                lock (GroupsCache) { GroupsCache = e.Groups; }
+            GroupsEvent.Set();
+
+            foreach (KeyValuePair<UUID, Group> DoCache in GroupsCache)
+            {
+                bool Retry = true;
+                while (Retry)
+                {
+                    grid.Groups.RequestGroupRoles(DoCache.Value.ID);
+                    if (RoleReply.WaitOne(TimeSpan.FromSeconds(30), false)) { Retry = false; }
+                    else
+                    {
+                        MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "There appears to have been a failure requesting the group roles for secondlife:///app/group/" + DoCache.Value.ID.ToString() + "/about - Trying again");
+
+                    }
+                }
+            }
+        }
+        private void ReloadGroupsCache()
+        {
+            grid.Groups.CurrentGroups += Groups_CurrentGroups;
+            grid.Groups.RequestCurrentGroups();
+            GroupsEvent.WaitOne(10000, false);
+            grid.Groups.CurrentGroups -= Groups_CurrentGroups;
+            GroupsEvent.Reset();
+        }
+
+        private UUID GroupName2UUID(String groupName)
+        {
+            UUID tryUUID;
+            if (UUID.TryParse(groupName, out tryUUID))
+                return tryUUID;
+            if (null == GroupsCache)
+            {
+                ReloadGroupsCache();
+                if (null == GroupsCache)
+                    return UUID.Zero;
+            }
+            lock (GroupsCache)
+            {
+                if (GroupsCache.Count > 0)
+                {
+                    foreach (Group currentGroup in GroupsCache.Values)
+                        if (currentGroup.Name.ToLower() == groupName.ToLower())
+                            return currentGroup.ID;
+                }
+            }
+            return UUID.Zero;
+        }
+
+        private bool IsGroup(UUID grpKey)
+        {
+            // For use in IMs since it appears partially broken at the moment
+            return GroupsCache.ContainsKey(grpKey);
+        }
 
         public void onIMEvent(object sender, InstantMessageEventArgs e)
         {
