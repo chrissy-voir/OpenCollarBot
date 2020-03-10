@@ -67,104 +67,6 @@ namespace OpenCollarBot
             BMem = OCBotMemory.Memory;
         }
 
-        public void onIMEvent(object sender, InstantMessageEventArgs e)
-        {
-
-            if (e.IM.FromAgentID == grid.Self.AgentID) return;
-            if (BMem == null) return;
-            BMem = OCBotMemory.Memory;
-
-            UUID SentBy = e.IM.FromAgentID;
-            int Level = 0;
-            if (BMem.BotAdmins.ContainsKey(SentBy)) Level = BMem.BotAdmins[SentBy];
-            if (e.IM.Dialog == InstantMessageDialog.GroupInvitation)
-            {
-                if (Level >= 4)
-                {
-                    grid.Self.GroupInviteRespond(e.IM.FromAgentID, e.IM.IMSessionID, true);
-                }
-                else
-                {
-                    grid.Self.GroupInviteRespond(e.IM.FromAgentID, e.IM.IMSessionID, false);
-                    MHE(MessageHandler.Destinations.DEST_AGENT, e.IM.FromAgentID, "You lack the proper permissions to perform this action");
-                }
-            }
-            else if (e.IM.Dialog == InstantMessageDialog.FriendshipOffered)
-            {
-                if (Level >= 4)
-                {
-                    grid.Friends.AcceptFriendship(e.IM.FromAgentID, e.IM.IMSessionID);
-                    MHE(MessageHandler.Destinations.DEST_AGENT, e.IM.FromAgentID, "Welcome to my friends list!");
-                }
-                else
-                {
-                    MHE(MessageHandler.Destinations.DEST_AGENT, e.IM.FromAgentID, "You lack proper permission");
-                }
-            }
-            else if (e.IM.Dialog == InstantMessageDialog.RequestTeleport)
-            {
-                if (Level >= 3)
-                {
-                    grid.Self.TeleportLureRespond(e.IM.FromAgentID, e.IM.IMSessionID, true);
-                    MHE(MessageHandler.Destinations.DEST_AGENT, e.IM.FromAgentID, "Teleporting...");
-                }
-                else
-                {
-                    grid.Self.TeleportLureRespond(e.IM.FromAgentID, e.IM.IMSessionID, false);
-                    MHE(MessageHandler.Destinations.DEST_AGENT, e.IM.FromAgentID, "You lack permission");
-                }
-            }
-            else if (e.IM.Dialog == InstantMessageDialog.MessageFromObject)
-            {
-                if (Level >= 5)
-                {
-                    // For this to work the object must have been granted auth!!!!!
-                    Dictionary<string, string> args = new Dictionary<string, string>();
-                    args.Add("type", "im");
-                    args.Add("source", "obj");
-                    args.Add("request", e.IM.Message);
-                    args.Add("from", e.IM.FromAgentID.ToString());
-                    args.Add("from_sess", e.IM.IMSessionID.ToString());
-                    args.Add("fromName", e.IM.FromAgentName);
-                    passArguments(JsonConvert.SerializeObject(args));
-                }
-                else
-                {
-                    // If auth is insufficient, ignore it. 
-                }
-            }
-            else if (e.IM.Dialog == InstantMessageDialog.MessageFromAgent || e.IM.Dialog == InstantMessageDialog.SessionSend)
-            {
-                //if (e.IM.Message.Substring(0, 1) != "!") return;
-                string msgs = e.IM.Message;
-                //string msgs = e.IM.Message.Substring(1);
-                // Perform a few tests before live deployment
-                if (IsGroup(e.IM.IMSessionID))
-                {
-
-                    Dictionary<string, string> args = new Dictionary<string, string>();
-                    args.Add("type", "group");
-                    args.Add("source", "agent");
-                    args.Add("request", msgs);
-                    args.Add("from", e.IM.FromAgentID.ToString());
-                    args.Add("from_sess", e.IM.IMSessionID.ToString());
-                    args.Add("fromName", e.IM.FromAgentName);
-                    passArguments(JsonConvert.SerializeObject(args));
-                }
-                else
-                {
-                    Dictionary<string, string> args = new Dictionary<string, string>();
-                    args.Add("type", "im");
-                    args.Add("source", "agent");
-                    args.Add("request", msgs);
-                    args.Add("from", e.IM.FromAgentID.ToString());
-                    args.Add("from_sess", "");
-                    args.Add("fromName", e.IM.FromAgentName);
-                    passArguments(JsonConvert.SerializeObject(args));
-                }
-            } 
-            
-        }
 
         public void passArguments(string data)
         {
@@ -318,68 +220,10 @@ namespace OpenCollarBot
 
         }
 
-        private Dictionary<UUID, Group> GroupsCache = null;
-        private ManualResetEvent GroupsEvent = new ManualResetEvent(false);
-        private ManualResetEvent RoleReply = new ManualResetEvent(false);
-        private void Groups_CurrentGroups(object sender, CurrentGroupsEventArgs e)
-        {
-            if (null == GroupsCache)
-                GroupsCache = e.Groups;
-            else
-                lock (GroupsCache) { GroupsCache = e.Groups; }
-            GroupsEvent.Set();
 
-            foreach (KeyValuePair<UUID, Group> DoCache in GroupsCache)
-            {
-                bool Retry = true;
-                while (Retry)
-                {
-                    grid.Groups.RequestGroupRoles(DoCache.Value.ID);
-                    if (RoleReply.WaitOne(TimeSpan.FromSeconds(30), false)) { Retry = false; }
-                    else
-                    {
-                        MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "There appears to have been a failure requesting the group roles for secondlife:///app/group/" + DoCache.Value.ID.ToString() + "/about - Trying again");
-
-                    }
-                }
-            }
-        }
-        private void ReloadGroupsCache()
+        public void onIMEvent(object sender, InstantMessageEventArgs e)
         {
-            grid.Groups.CurrentGroups += Groups_CurrentGroups;
-            grid.Groups.RequestCurrentGroups();
-            GroupsEvent.WaitOne(10000, false);
-            grid.Groups.CurrentGroups -= Groups_CurrentGroups;
-            GroupsEvent.Reset();
-        }
-
-        private UUID GroupName2UUID(String groupName)
-        {
-            UUID tryUUID;
-            if (UUID.TryParse(groupName, out tryUUID))
-                return tryUUID;
-            if (null == GroupsCache)
-            {
-                ReloadGroupsCache();
-                if (null == GroupsCache)
-                    return UUID.Zero;
-            }
-            lock (GroupsCache)
-            {
-                if (GroupsCache.Count > 0)
-                {
-                    foreach (Group currentGroup in GroupsCache.Values)
-                        if (currentGroup.Name.ToLower() == groupName.ToLower())
-                            return currentGroup.ID;
-                }
-            }
-            return UUID.Zero;
-        }
-
-        private bool IsGroup(UUID grpKey)
-        {
-            // For use in IMs since it appears partially broken at the moment
-            return GroupsCache.ContainsKey(grpKey);
+            // nothing custom to do here
         }
     }
 
