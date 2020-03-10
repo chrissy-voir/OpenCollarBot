@@ -504,7 +504,7 @@ namespace OpenCollarBot
                 CTX = listener.EndGetContext(ar);
             }catch(Exception e)
             {
-                SysOut.Instance.info("ERROR: Getting the end context for the listener failed");
+                BotSession.Instance.Logger.info(log:"ERROR: Getting the end context for the listener failed");
                 return;
             }
             listener.BeginGetContext(OnWebHook, null);
