@@ -8,6 +8,8 @@ Licensed under the GPLv2
 using OpenMetaverse;
 using Bot;
 using Bot.CommandSystem;
+using Bot.ConfigSystem;
+
 
 
 namespace OpenCollarBot
@@ -16,10 +18,12 @@ namespace OpenCollarBot
     {
 
         [CommandGroup("auth_user", 5, 2, "Authorizes a user to have command access. Arguments are user (UUID), and Level (int)", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void set_auth(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void set_auth(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
-            OCBotMemory mem = OCBotMemory.Memory;
-            log.debug("Existing Admins: " + mem.BotAdmins.Count.ToString());
+            MainConfiguration mem = MainConfiguration.Instance;
+            BotSession.Instance.Logger.info(log:"Existing Admins: " + mem.BotAdmins.Count.ToString());
             if (level < 5 && mem.BotAdmins.Count > 0)
             {
                 MHE(source, UUID.Zero, "Authorization failure. You do not have the proper permission level");

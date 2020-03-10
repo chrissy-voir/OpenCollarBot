@@ -34,7 +34,7 @@ namespace OpenCollarBot
     {
 
         [CommandGroup("bug", 0, 0, "bug - Begins the process of opening a bug report on github!", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void BeginBugReport(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void BeginBugReport(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             MHE(source, client, "Hi secondlife:///app/agent/" + agentKey.ToString() + "/about\nCan you please tell me in a single sentence or less a summary of what this bug is?\n \n[Say 'cancel' at any time before I open a github ticket if you change your mind]");
             OCBotMemory bm = OCBotMemory.Memory;
@@ -58,7 +58,7 @@ namespace OpenCollarBot
 
         }
         [CommandGroup("get_rate", 0, 0, "get_rate - Displays your current rate usage", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ShowRate(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void ShowRate(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory bm = OCBotMemory.Memory;
 
@@ -157,7 +157,7 @@ namespace OpenCollarBot
         }
 
         [CommandGroup("clear_reports", 4, 0, "Clears in progress bug reports", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void clear_bug_reports(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void clear_bug_reports(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -171,7 +171,7 @@ namespace OpenCollarBot
 
 
         [CommandGroup("set_git_owner", 5, 1, "set_git_owner [owner name] - Sets the github owner name for the repo", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void Set_GitOwner(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void Set_GitOwner(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             ocb.gitowner = additionalArgs[0];
@@ -181,7 +181,7 @@ namespace OpenCollarBot
         }
 
         [CommandGroup("set_git_repo", 5, 1, "set_git_repo [repo name] - Sets the github repo", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void Set_GitRepo(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void Set_GitRepo(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             ocb.gitrepo = additionalArgs[0];
@@ -193,7 +193,7 @@ namespace OpenCollarBot
 
 
         [CommandGroup("reset_rate", 4, 1, "reset_rate [uuid] - Completely reset a person's rate limit block ", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ResetRateLimits(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void ResetRateLimits(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -208,7 +208,7 @@ namespace OpenCollarBot
 
 
         [CommandGroup("reset_rates", 5, 0, "reset_rates - Completely reset all rate limits", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ResetAllRateLimits(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void ResetAllRateLimits(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -222,7 +222,7 @@ namespace OpenCollarBot
 
 
         [CommandGroup("set_alert_group", 5, 1, "set_alert_group [uuid] - Sets the alert group for git notifications", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void SetAlertGroup(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void SetAlertGroup(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -233,7 +233,7 @@ namespace OpenCollarBot
 
 
         [CommandGroup("feature", 0, 0, "feature - Begins feature request program", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void FileFeatureRequest(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void FileFeatureRequest(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -254,7 +254,7 @@ namespace OpenCollarBot
 
 
         [CommandGroup("webhook_auth", 4, 2, "webhook_auth [github_name] [y/n]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void WebHookAuthMgr(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void WebHookAuthMgr(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -544,7 +544,7 @@ namespace OpenCollarBot
         }
 
         [CommandGroup("ls_replay", 5, 0, "ls_replay - Lists all available replay data files", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void ListReplays(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void ListReplays(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             // List all replay files!
             DirectoryInfo DI = new DirectoryInfo("request_log");
@@ -561,7 +561,7 @@ namespace OpenCollarBot
 
 
         [CommandGroup("replay", 75, 1, "replay [date_code] - Replays a git request", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void DoReplay(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void DoReplay(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             RequestLog RL = null;
             RequestLog.HTTPData HD = new RequestLog.HTTPData();
@@ -635,7 +635,7 @@ namespace OpenCollarBot
 
 
         [CommandGroup("comment", 0, 1, "comment [ticket_number] - Comments on a ticket number", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void DoActionComment(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void DoActionComment(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -754,7 +754,7 @@ namespace OpenCollarBot
 
         [CommandGroupMaster("Git")]
         [CommandGroup("new_scriptlist", 5, 0, "new_scriptlist - Resets the local ScriptList data file in preparation for ZI integration", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void new_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void new_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             if (File.Exists("ScriptList.bdf")) File.Delete("ScriptList.bdf");
             ScriptList.ResetSingleton();
@@ -767,7 +767,7 @@ namespace OpenCollarBot
 
         [CommandGroupMaster("Git")]
         [CommandGroup("add_scriptlist", 5, 4, "add_scriptlist [scriptName] [scriptFolder] [assetType] [fileExt:optional] - Adds a entry to the ScriptList BDF", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void add_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void add_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
 
             ScriptList sl = ScriptList.Instance;
@@ -793,7 +793,7 @@ namespace OpenCollarBot
 
         [CommandGroupMaster("Git")]
         [CommandGroup("get_scriptlist", 5,2,"get_scriptlist [gitowner] [branch] - Retrieves the ScriptList.bdf from a specified location for editing", MessageHandler.Destinations.DEST_AGENT| MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void get_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void get_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             HttpWebRequest hwr = null;
             HttpWebResponse hwresp = null;
@@ -818,7 +818,7 @@ namespace OpenCollarBot
 
         [CommandGroupMaster("Git")]
         [CommandGroup("rem_scriptlist", 5, 1, "rem_scriptlist [scriptName] - Remove entry from BDF", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void rem_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void rem_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             ScriptList sl = ScriptList.Instance;
             sl.Scripts.Remove(additionalArgs[0]);
@@ -829,7 +829,7 @@ namespace OpenCollarBot
 
         [CommandGroupMaster("Git")]
         [CommandGroup("dump_scriptlist", 5, 0, "dump_scriptlist - Dump BDF to human readable", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void dump_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void dump_scriptlist(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             MHE(source, client, "Starting dump..");
             ScriptList sl = null;
@@ -851,7 +851,7 @@ namespace OpenCollarBot
 
         [CommandGroupMaster("Git")]
         [CommandGroup("refresh_git", 0, 1, "refresh_git [gitowner] - Pulls the master branch of OpenCollar from the gitowner account", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP)]
-        public void refresh_git_build(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void refresh_git_build(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             MHE(source, client, "* Initializing Refresh");
 
@@ -890,7 +890,7 @@ namespace OpenCollarBot
 
         [CommandGroupMaster("Git")]
         [CommandGroup("refresh_git_nosend", 1000, 1, "refresh_git_nosend [gitowner] - Pulls the master branch of OpenCollar from the gitowner account", MessageHandler.Destinations.DEST_ACTION)]
-        public void refresh_git_build_nosend(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void refresh_git_build_nosend(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             MHE(source, client, "* Initializing Refresh");
 
@@ -930,7 +930,7 @@ namespace OpenCollarBot
 
         [CommandGroupMaster("Git")]
         [CommandGroup("refresh_git_branch", 0, 2, "refresh_git_branch [gitOwner] [gitbranch] - Pulls the branch of OpenCollar from the gitowner account", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void refresh_git_branch_build(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void refresh_git_branch_build(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
             MHE(source, client, "* Initializing Refresh");
             HttpWebRequest hwr = null;

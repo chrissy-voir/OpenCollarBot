@@ -26,7 +26,7 @@ namespace OpenCollarBot.GroupCommands
     {
         [CommandGroup("create_notice", 5, 1, "create_notice [noticeName] - Creates a new scheduled notice", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
         public void create_notice(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
                                 CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -139,7 +139,7 @@ namespace OpenCollarBot.GroupCommands
 
         [CommandGroup("list_notices", 5, 0, "list_notices - List all notices", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
         public void list_notices(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
                                 CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -153,7 +153,7 @@ namespace OpenCollarBot.GroupCommands
 
         [CommandGroup("rm_notice", 5, 1, "rm_notices [noticeName] - Removes a notice", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
         public void rm_notice(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
                                 CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -168,7 +168,7 @@ namespace OpenCollarBot.GroupCommands
 
         [CommandGroup("clear_mknotice", 5, 0, "clear_mknotice - Clears notice creator sessions", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
         public void reset_notice_sess(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
                                 CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -181,7 +181,7 @@ namespace OpenCollarBot.GroupCommands
 
         [CommandGroup("check_notices", 5, 0, "check_notices - Checks the notice queue for pending dispatches", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
         public void check_notice_queue(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
                                 CommandRegistry registry, UUID agentKey, string agentName)
         {
             PerformCheck(grid, DateTime.Now - TimeSpan.FromSeconds(30), MHE);

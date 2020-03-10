@@ -22,13 +22,17 @@ namespace OpenCollarBot.Settings
     {
 
         [CommandGroup("show_level", 0, 0, "This command shows your current auth level if any.", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void show_level(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void show_level(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
             MHE(source, client, "Hi secondlife:///app/agent/" + agentKey.ToString() + "/about !! Your authorization level is " + level.ToString());
         }
 
         [CommandGroup("show_version", 0, 0, "Outputs the bot version", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void show_version(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void show_version(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
             MHE(source, client, "Version " + ASMInfo.BotVer.ToString());
         }
@@ -36,7 +40,9 @@ namespace OpenCollarBot.Settings
 
 
         [CommandGroup("show_admins", 4, 0, "Outputs all admin users", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void show_admins(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void show_admins(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -47,7 +53,9 @@ namespace OpenCollarBot.Settings
         }
 
         [CommandGroup("show_login_defaults", 4, 0, "Outputs region name and location vector", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void show_login_defaults(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void show_login_defaults(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
 
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -55,7 +63,9 @@ namespace OpenCollarBot.Settings
         }
 
         [CommandGroup("show_git_authed", 4, 0, "", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void show_git_authed(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void show_git_authed(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
 
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -66,7 +76,9 @@ namespace OpenCollarBot.Settings
         }
 
         [CommandGroup("show_git_misc", 4, 0, "Prints the git repo, owner, and the Alert Group", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void show_git_misc(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void show_git_misc(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
 
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -74,7 +86,9 @@ namespace OpenCollarBot.Settings
         }
 
         [CommandGroup("show_reports", 4, 0, "Outputs who has a active report", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void show_report_sessions(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void show_report_sessions(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -114,7 +128,9 @@ namespace OpenCollarBot.Settings
 
 
         [CommandGroup("list_limits", 4, 0, "list_limits - Lists all rate limits.", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ListsRateLimits(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        public void ListsRateLimits(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 

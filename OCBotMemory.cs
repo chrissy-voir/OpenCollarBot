@@ -70,7 +70,7 @@ namespace OpenCollarBot
          */
 
         [NonSerialized()]
-        private SysOut Log = null;
+        private Bot.Logger Log = BotSession.Instance.Logger;
         public float ConfigVersion
         {
             get

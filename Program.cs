@@ -26,7 +26,7 @@ namespace OpenCollarBot
         public GridClient grid;
         public CommandManager CM = null;
         public OCBotMemory BMem = null;
-        public SysOut Log = SysOut.Instance;
+        public Logger Log = BotSession.Instance.Logger;
         public CommandRegistry registry;
         public MessageHandler.MessageHandleEvent MHE;
 
@@ -181,7 +181,7 @@ namespace OpenCollarBot
             grid.Groups.GroupRoleDataReply += CacheGroupRoles;
 
             LastScheduleCheck = DateTime.Now - TimeSpan.FromMinutes(5);
-            Log = SysOut.Instance;
+            Log = BotSession.Instance.Logger;
             BMem = OCBotMemory.Memory;
 
             if (BMem.status != "")
