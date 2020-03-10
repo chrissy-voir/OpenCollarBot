@@ -18,6 +18,7 @@ using System.IO;
 using Newtonsoft.Json;
 using OpenMetaverse.Packets;
 using OpenCollarBot.GroupCommands;
+using Logger = Bot.Logger;
 
 namespace OpenCollarBot
 {
@@ -167,8 +168,8 @@ namespace OpenCollarBot
 
         public void passArguments(string data)
         {
-
-            CM.RunChatCommand(data, BMem, grid, MHE, registry);
+            
+            CM.RunChatCommand(data, grid, MHE, registry);
         }
 
         public void run(GridClient client, MessageHandler MH, CommandRegistry registry)
@@ -187,8 +188,8 @@ namespace OpenCollarBot
             if (BMem.status != "")
                 MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, BMem.status);
 
+            CM = new CommandManager(BotSession.Instance.Logger, client, MH.callbacks);
 
-            CM = new CommandManager(Log, client, BMem, MH.callbacks);
             ReloadGroupsCache();
             if (client.Network.CurrentSim.Name != BMem.DefaultRegion && BMem.DefaultRegion != "")
             {

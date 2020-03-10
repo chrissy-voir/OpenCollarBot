@@ -216,7 +216,7 @@ namespace OpenCollarBot
 
         [CommandGroup("list_asm", 1, 0, "list_asm - Lists all loaded assembly names", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
         public void list_asm(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
                                 CommandRegistry registry, UUID agentKey, string agentName)
         {
             foreach (Assembly A in AppDomain.CurrentDomain.GetAssemblies())

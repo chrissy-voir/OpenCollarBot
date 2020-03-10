@@ -8,7 +8,6 @@ Licensed under the GPLv2
 using OpenMetaverse;
 using Bot;
 using Bot.CommandSystem;
-using Bot.ConfigSystem;
 
 
 
