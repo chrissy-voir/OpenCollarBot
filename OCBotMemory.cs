@@ -75,7 +75,7 @@ namespace OpenCollarBot
         {
             get
             {
-                return 1.8f;
+                return 1.9f;
 
             }
             set { }
@@ -89,8 +89,6 @@ namespace OpenCollarBot
             set { }
         }
         public List<string> Data { get; set; }
-
-        public Dictionary<UUID, int> BotAdmins { get; set; }
 
         public string DefaultRegion { get; set; }
 
