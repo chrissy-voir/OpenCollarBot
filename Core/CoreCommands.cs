@@ -21,6 +21,14 @@ namespace OpenCollarBot
 {
     class CoreCommands
     {
+
+        [CommandGroup("open_collar_menu", 0, 0, "open_collar_menu - Opens your OpenCollar menu", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
+        public void GetOCMenu(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "Requesting OpenCollar Menu");
+            grid.Self.Chat(agentName.Substring(0, 2) + "menu", 1, ChatType.Normal);
+        }
+
         [CommandGroup("terminate_bot", 5, 0, "", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
         public void PerformExit(UUID client, int level, GridClient grid, string[] additionalArgs, SysOut log, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
