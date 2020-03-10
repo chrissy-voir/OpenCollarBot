@@ -75,7 +75,7 @@ namespace OpenCollarBot
                 // Initiate group log saver
                 string GroupName = client.Groups.GroupName2KeyCache[fromID];
 
-                GroupLog.Instance.WriteLogEntry(GroupName,"secondlife:///app/agent/"+agentKey.ToString()+"/about ("+ agentName+") : "+request);
+                //GroupLog.Instance.WriteLogEntry(GroupName, "secondlife:///app/agent/" + agentKey.ToString() + "/about (" + agentName + ") : " + request);
             }
             else { agentKey = fromID; }
 
