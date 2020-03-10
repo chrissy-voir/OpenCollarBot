@@ -322,7 +322,6 @@ namespace OpenCollarBot
         public void CheckIntegrity()  // NEEDED TO ENSURE WE DO NOT RUN INTO NULL VALUES DURING RUNTIME OPERATION
         {
             if (Data == null) Data = new List<string>();
-            if (BotAdmins == null) BotAdmins = new Dictionary<UUID, int>();
             if (DefaultLocation == null) DefaultLocation = Vector3.Zero;
             if (DefaultRegion == null) DefaultRegion = "";
             if (sit_cube == null) sit_cube = UUID.Zero;
