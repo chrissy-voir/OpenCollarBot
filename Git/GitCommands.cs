@@ -126,7 +126,7 @@ namespace OpenCollarBot
             {
                 if (reply != "ready") return;
                 int userLevel = 0;
-                if (ocb.BotAdmins.ContainsKey(agent)) userLevel = ocb.BotAdmins[agent];
+                if (MainConfiguration.Instance.BotAdmins.ContainsKey(agent)) userLevel = MainConfiguration.Instance.BotAdmins[agent];
 
                 if (!ocb.SubmitNewRateUsage(agent, MHE) && userLevel < 3)
                 {
@@ -330,7 +330,7 @@ namespace OpenCollarBot
             else if (RD.ReportStage == 2)
             {
                 int LVL = 0;
-                if (ocb.BotAdmins.ContainsKey(agent)) LVL = ocb.BotAdmins[agent];
+                if (MainConfiguration.Instance.BotAdmins.ContainsKey(agent)) LVL = MainConfiguration.Instance.BotAdmins[agent];
                 if (!ocb.SubmitNewRateUsage(agent, MHE) && LVL < 3)
                 {
                     // Notify user

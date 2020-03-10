@@ -44,11 +44,10 @@ namespace OpenCollarBot.Settings
                                 MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
                                 CommandRegistry registry, UUID agentKey, string agentName)
         {
-            OCBotMemory ocb = OCBotMemory.Memory;
 
-            for (int i = 0; i < ocb.BotAdmins.Count; i++)
+            for (int i = 0; i < MainConfiguration.Instance.BotAdmins.Count; i++)
             {
-                MHE(source, client, "secondlife:///app/agent/" + ocb.BotAdmins.ElementAt(i).Key.ToString() + "/about [" + ocb.BotAdmins.ElementAt(i).Value.ToString() + "] " + ocb.BotAdmins.ElementAt(i).Key.ToString());
+                MHE(source, client, "secondlife:///app/agent/" + MainConfiguration.Instance.BotAdmins.ElementAt(i).Key.ToString() + "/about [" + MainConfiguration.Instance.BotAdmins.ElementAt(i).Value.ToString() + "] " + MainConfiguration.Instance.BotAdmins.ElementAt(i).Key.ToString());
             }
         }
 
