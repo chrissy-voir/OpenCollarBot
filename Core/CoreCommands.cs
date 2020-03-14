@@ -15,7 +15,7 @@ using Bot;
 using Bot.CommandSystem;
 using System.IO;
 using System.Reflection;
-
+using System.Net;
 
 namespace OpenCollarBot
 {
@@ -27,6 +27,75 @@ namespace OpenCollarBot
         {
             MHE(source, client, "Requesting OpenCollar Menu");
             grid.Self.Chat(agentName.Substring(0, 2) + "menu", 1, ChatType.Normal);
+        }
+
+
+        [CommandGroup("monitor_sim", 4, 1, "monitor_sim [string:SimName] - Monitors misc data about a sim every 5 seconds", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
+        public void MonitorSim(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            string par = additionalArgs[0].Replace('_', ' ');
+            OCBSession.Instance.MonitoredRegions.Add(  par);
+            /*GridRegion rg;
+            if(grid.Grid.GetGridRegion(additionalArgs[0], GridLayerType.Objects, out rg))
+            {
+                
+            }*/
+            Thread X = new Thread(() =>
+            {
+                while (OCBSession.Instance.MonitoredRegions.Count != 0)
+                {
+
+                    Thread.Sleep(10000);
+
+                    foreach (string region in OCBSession.Instance.MonitoredRegions)
+                    {
+                        GridRegion rg;
+                        if (BotSession.Instance.grid.Grid.GetGridRegion(region, GridLayerType.Objects, out rg))
+                        {
+                            List<MapItem> MI = BotSession.Instance.grid.Grid.MapItems(rg.RegionHandle, GridItemType.AgentLocations, GridLayerType.Objects, 60000);
+                            int actual = 0;
+                            foreach(MapItem mp in MI)
+                            {
+                                MapAgentLocation MAL = (MapAgentLocation)mp;
+                                actual += MAL.AvatarCount;
+                            }
+                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, $"[{rg.Name}] Number of avatars: {actual}; Map TextureID: {rg.MapImageID.ToString()}");
+
+
+                        }
+                    }
+                }
+                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "No more monitored regions. Closing watchdog");
+                return;
+            });
+
+            X.Start();
+        }
+
+        [CommandGroup("get_region_texture", 0, 1, "get_region_texture [sim_name] - prints the UUID Sim map texture", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
+        public void MapTexture(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            string par = additionalArgs[0].Replace('_', ' ');
+
+            GridRegion rg;
+            if (BotSession.Instance.grid.Grid.GetGridRegion(par, GridLayerType.Objects, out rg))
+            {
+                MHE(source, client, $"Map Texture: {rg.MapImageID.ToString()}");
+
+            }
+        }
+
+        [CommandGroup("demonitor_sim", 4, 1, "demonitor_sim [string:SimName] - DeMonitors misc data about a sim every 5 seconds", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
+        public void DeMonitorSim(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            string par = additionalArgs[0].Replace('_', ' ');
+            if (OCBSession.Instance.MonitoredRegions.Contains(par))
+                OCBSession.Instance.MonitoredRegions.Remove(par);
+            /*GridRegion rg;
+            if(grid.Grid.GetGridRegion(additionalArgs[0], GridLayerType.Objects, out rg))
+            {
+                
+            }*/
         }
 
         [CommandGroup("terminate_bot", 5, 0, "", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]

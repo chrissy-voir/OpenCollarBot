@@ -33,6 +33,7 @@ namespace OpenCollarBot
 
 
 
+        public List<string> MonitoredRegions = new List<string>();
         // This file is for volatile information. 
         // If we do not care about it persisting, it will be stored here!
         public Dictionary<int, Program.ScriptDialogSession> ScriptSessions = new Dictionary<int, Program.ScriptDialogSession>();
