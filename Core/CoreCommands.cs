@@ -620,7 +620,7 @@ namespace OpenCollarBot
                 string kicked = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(additionalArgs[0]));
                 string raw_msg = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(additionalArgs[1]));
                 string kicked_by = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(additionalArgs[2]));
-                new_notice.NoticeSummary = "Kick: " + kicked + " by " + kicked_by;
+                new_notice.NoticeSummary = "Automatic Kick Notification";
                 new_notice.Repeats = false;
                 new_notice.NoticeDescription = raw_msg;
 
