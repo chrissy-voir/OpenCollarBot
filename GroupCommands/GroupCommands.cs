@@ -16,9 +16,7 @@ using Bot.CommandSystem;
 using System.IO;
 using OpenMetaverse;
 using OpenMetaverse.Packets;
-
-
-
+using OpenMetaverse.ImportExport.Collada14;
 
 namespace OpenCollarBot.GroupCommands
 {
@@ -50,6 +48,42 @@ namespace OpenCollarBot.GroupCommands
             MHE(source, client, "Okay! Notice session started! To stop at any time say 'cancel'\n \n[Please submit a summary of the notice!]");
         }
 
+        [CommandGroup("modify_notice", 5, 1, "modify_notice [noticeName] - Modifies a existing notice", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
+        public void modify_existing_notice(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            // This command will modify an existing notice
+            if (OCBotMemory.Memory.NoticeLists.ContainsKey(additionalArgs[0]))
+            {
+                OCBotMemory.Notices existingNotice = OCBotMemory.Memory.NoticeLists[additionalArgs[0]];
+                MHE(source, client, $"OK!\n \nHere is the information currently set\nDescription: {existingNotice.NoticeSummary}\nBody: {existingNotice.NoticeDescription}\nGroup Key: {existingNotice.GroupKey.ToString()}\nHas Attachment? [{existingNotice.HasAttachment.ToString()}]\nAttachment UUID: {existingNotice.NoticeAttachment.ToString()}\nRepeats: [{existingNotice.Repeats.ToString()}]");
+                OCBotMemory.NoticeCreationSessions newSess = new OCBotMemory.NoticeCreationSessions();
+                newSess.State = 0;
+                newSess.TemporaryNotice = existingNotice;
+                newSess.SessionAv = agentKey;
+
+                MHE(source, client, "You will be asked for the various different properties. To skip over something say: skip");
+
+
+
+                if (OCBotMemory.Memory.NoticeSessions.ContainsKey(agentKey))
+                {
+                    MHE(source, client, "You appear to have already had a notice creator session running. Restarting");
+                    OCBotMemory.Memory.NoticeSessions.Remove(agentKey);
+                }
+                OCBotMemory.Memory.NoticeSessions.Add(agentKey, newSess);
+                MHE(source, client, "Please submit a summary of the notice");
+
+            }
+            else
+            {
+                MHE(source, client, "There is no such notice with that ID");
+            }
+
+        }
+
+
         public void update_notice_sess(UUID fromID, UUID agentKey, string request, MessageHandler.Destinations sourceLoc, MessageHandler.MessageHandleEvent MHE, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -60,6 +94,51 @@ namespace OpenCollarBot.GroupCommands
                 ocb.NoticeSessions.Remove(agentKey);
                 ocb.Save();
                 MHE(sourceLoc, fromID, "Canceled");
+                return;
+            } else if(request.ToLower() == "skip")
+            {
+                MHE(sourceLoc, fromID, "Stand by...");
+                switch (nCS.State)
+                {
+                    case 0:
+                        {
+                            MHE(sourceLoc, fromID, $"Notice summary remains set to: {nCS.TemporaryNotice.NoticeSummary}");
+                            nCS.State++;
+                            MHE(sourceLoc, fromID, "Notice summary set!\n \n[Type out the body of the notice]");
+                            break;
+                        }
+                    case 1:
+                        {
+                            MHE(sourceLoc, fromID, $"Notice description remains set to: {nCS.TemporaryNotice.NoticeDescription}");
+                            nCS.State++;
+                            MHE(sourceLoc, fromID, "Notice description set!\n \n[Should the notice repeat every 2 weeks? (y/n)]");
+                            break;
+                        }
+                    case 2:
+                        {
+                            MHE(sourceLoc, fromID, $"Repeat remains set to: {nCS.TemporaryNotice.Repeats.ToString()}");
+                            nCS.State++;
+                            MHE(sourceLoc, fromID, "Notice will " + (nCS.TemporaryNotice.Repeats ? "" : " -not- ") + " repeat every 2 weeks\n \n[What group should this notice be sent in? (expect:UUID)]");
+                            break;
+                        }
+                    case 3:
+                        {
+                            MHE(sourceLoc, fromID, $"Group Key remains set to: {nCS.TemporaryNotice.GroupKey.ToString()}");
+                            nCS.State++;
+                            MHE(sourceLoc, fromID, "Group set! (Will verify that I am in this group after all data is set)\n \n[Want an attachment set? (y/n)]");
+                            break;
+                        }
+                    case 4:
+                        {
+                            MHE(sourceLoc, fromID, $"Attachment UUID remains set to: {nCS.TemporaryNotice.NoticeAttachment.ToString()}");
+                            nCS.State = 6;
+                            MHE(sourceLoc, fromID, "Here's the details of the built notice, please verify it is correct\n \nNotice Summary: " + nCS.TemporaryNotice.NoticeSummary + "\nNotice Description: " + nCS.TemporaryNotice.NoticeDescription + "\nNotice has attachment: " + nCS.TemporaryNotice.HasAttachment.ToString() + "\nNotice Attachment ID: " + nCS.TemporaryNotice.NoticeAttachment.ToString() + "\nRepeats: " + nCS.TemporaryNotice.Repeats.ToString() + "\n \n[To confirm this, say 'confirm']");
+                            break;
+                        }
+                }
+
+                ocb.NoticeSessions[agentKey] = nCS;
+                ocb.Save();
                 return;
             }
 
@@ -113,7 +192,7 @@ namespace OpenCollarBot.GroupCommands
                 else
                 {
                     nCS.State = 6;
-                    MHE(sourceLoc, fromID, "Here's the details of the built notice, please very it is correct\n \nNotice Summary: " + nCS.TemporaryNotice.NoticeSummary + "\nNotice Description: " + nCS.TemporaryNotice.NoticeDescription + "\nNotice has attachment: " + nCS.TemporaryNotice.HasAttachment.ToString() + "\nNotice Attachment ID: " + nCS.TemporaryNotice.NoticeAttachment.ToString() + "\nRepeats: " + nCS.TemporaryNotice.Repeats.ToString() + "\n \n[To confirm this, say 'confirm']");
+                    MHE(sourceLoc, fromID, "Here's the details of the built notice, please verify it is correct\n \nNotice Summary: " + nCS.TemporaryNotice.NoticeSummary + "\nNotice Description: " + nCS.TemporaryNotice.NoticeDescription + "\nNotice has attachment: " + nCS.TemporaryNotice.HasAttachment.ToString() + "\nNotice Attachment ID: " + nCS.TemporaryNotice.NoticeAttachment.ToString() + "\nRepeats: " + nCS.TemporaryNotice.Repeats.ToString() + "\n \n[To confirm this, say 'confirm']");
                 }
 
                 ocb.NoticeSessions[agentKey] = nCS;
@@ -128,6 +207,7 @@ namespace OpenCollarBot.GroupCommands
                     // Adding notice to task scheduler
                     if (!ocb.NoticeLists.ContainsKey(nCS.TemporaryNotice.InternalName))
                         ocb.NoticeLists.Add(nCS.TemporaryNotice.InternalName, ocb.NoticeSessions[agentKey].TemporaryNotice);
+                    else ocb.NoticeLists[nCS.TemporaryNotice.InternalName] = ocb.NoticeSessions[agentKey].TemporaryNotice;
 
                     // Notice is now scheduled, remove session
                     ocb.NoticeSessions.Remove(agentKey);
