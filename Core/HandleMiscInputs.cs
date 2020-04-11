@@ -16,7 +16,7 @@ namespace OpenCollarBot.Core
         public void handle(string text, UUID User, string agentName, MessageHandler.Destinations src, UUID originator)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
-            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, $"Got data \n\n[HandleMiscInputs.cs]:handle(\"{text}\", {User.ToString()}, \"{agentName}\", {src.ToString()}, {originator.ToString()})");
+            //BotSession.Instance.MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, $"Got data \n\n[HandleMiscInputs.cs]:handle(\"{text}\", {User.ToString()}, \"{agentName}\", {src.ToString()}, {originator.ToString()})");
             if (ocb.ActiveReportSessions.ContainsKey(User) && ocb.ActiveReportSessions.Count > 0)
             {
                 // Send report response to GitCommands
