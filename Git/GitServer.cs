@@ -60,7 +60,7 @@ namespace OpenCollarBot.Git
             {
                 listener = new HttpListener();
                 MHEx = MH.callbacks;
-                listener.Prefixes.Add("https://*:35591/");
+                listener.Prefixes.Add($"https://*:{OCBotMemory.Memory.WebServerPort}/");
                 
                 listener.Start();
                 GC = new GitCommands(listener, MH.callbacks);

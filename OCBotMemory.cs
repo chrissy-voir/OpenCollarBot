@@ -90,6 +90,8 @@ namespace OpenCollarBot
         }
         public List<string> Data { get; set; }
 
+        public int WebServerPort { get; set; } = 35591;
+
         public string DefaultRegion { get; set; }
 
         public Vector3 DefaultLocation { get; set; }
