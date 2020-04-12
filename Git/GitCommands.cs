@@ -18,7 +18,6 @@ using Bot.CommandSystem;
 using System.Net;
 using System.Net.Http;
 using System.IO;
-using Octokit.Clients;
 using Octokit;
 using System.Collections.Specialized;
 using System.Threading;
