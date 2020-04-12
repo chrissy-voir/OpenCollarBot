@@ -1,6 +1,3 @@
 [submodule "libremetaverse"]
 	path = libremetaverse
 	url = https://github.com/cinderblocks/libremetaverse.git
-[submodule "Core5"]
-	path = Core5
-	url = https://github.com/zontreck/BotCore5

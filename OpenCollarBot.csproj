@@ -13,12 +13,6 @@
     <None Remove="libremetaverse\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Core5\**" />
-    <EmbeddedResource Remove="Core5\**" />
-    <None Remove="Core5\**" />
-  </ItemGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\OCB</OutputPath>
   </PropertyGroup>
@@ -37,7 +31,7 @@
     <ProjectReference Include="libremetaverse\LibreMetaverse.Utilities\LibreMetaverse.Utilities.csproj" />
     <ProjectReference Include="libremetaverse\LibreMetaverseTypes\LibreMetaverse.Types.csproj" />
     <ProjectReference Include="libremetaverse\LibreMetaverse\LibreMetaverse.csproj" />
-    <ProjectReference Include="Core5\Bot.csproj" />
+    <ProjectReference Include="..\Bot\Bot.csproj" />
   </ItemGroup>
 
 </Project>
