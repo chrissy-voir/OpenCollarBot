@@ -21,35 +21,6 @@ namespace OpenCollarBot.Settings
     class DisplaySettings
     {
 
-        [CommandGroup("show_level", 0, 0, "This command shows your current auth level if any.", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void show_level(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            MHE(source, client, "Hi secondlife:///app/agent/" + agentKey.ToString() + "/about !! Your authorization level is " + level.ToString());
-        }
-
-        [CommandGroup("show_version", 0, 0, "Outputs the bot version", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void show_version(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            MHE(source, client, "Version " + ASMInfo.BotVer.ToString());
-        }
-
-
-
-        [CommandGroup("show_admins", 4, 0, "Outputs all admin users", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void show_admins(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
-        {
-
-            for (int i = 0; i < MainConfiguration.Instance.BotAdmins.Count; i++)
-            {
-                MHE(source, client, "secondlife:///app/agent/" + MainConfiguration.Instance.BotAdmins.ElementAt(i).Key.ToString() + "/about [" + MainConfiguration.Instance.BotAdmins.ElementAt(i).Value.ToString() + "] " + MainConfiguration.Instance.BotAdmins.ElementAt(i).Key.ToString());
-            }
-        }
 
         [CommandGroup("show_login_defaults", 4, 0, "Outputs region name and location vector", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
         public void show_login_defaults(UUID client, int level, GridClient grid, string[] additionalArgs,
@@ -68,7 +39,7 @@ namespace OpenCollarBot.Settings
         {
 
             OCBotMemory ocb = OCBotMemory.Memory;
-            foreach (string S in ocb.AuthedGithubUsers)
+            foreach (string S in MainConfiguration.Instance.AuthedGithubUsers)
             {
                 MHE(source, client, "[whitelisted] " + S);
             }

@@ -218,7 +218,6 @@ namespace OpenCollarBot
 
         public Dictionary<UUID, ReportData> ActiveCommentSessions { get; set; }
 
-        public List<string> AuthedGithubUsers { get; set; }
 
         public UUID AlertGroup { get; set; }
 
@@ -226,11 +225,6 @@ namespace OpenCollarBot
         public UUID StaffGroup { get; set; }
 
 
-        public bool Authed(string GHLogin)
-        {
-            if (AuthedGithubUsers.Contains(GHLogin)) return true;
-            else return false;
-        }
 
         [Serializable()]
         public struct MailListMember
@@ -274,7 +268,6 @@ namespace OpenCollarBot
         public Dictionary<string, MailList> MailingLists { get; set; }
 
 
-        public List<string> LinkedDLLs { get; set; }
 
         [NonSerialized()]
         public string status = "";
@@ -333,11 +326,9 @@ namespace OpenCollarBot
             if (RateLimiter == null) RateLimiter = new Dictionary<UUID, RateData>();
             if (ActiveFeatureSessions == null) ActiveFeatureSessions = new Dictionary<UUID, ReportData>();
             if (AlertGroup == null) AlertGroup = UUID.Zero;
-            if (AuthedGithubUsers == null) AuthedGithubUsers = new List<string>();
             if (ActiveCommentSessions == null) ActiveCommentSessions = new Dictionary<UUID, ReportData>();
             if (BlacklistMailingList == null) BlacklistMailingList = new List<UUID>();
             if (MailingLists == null) MailingLists = new Dictionary<string, MailList>();
-            if (LinkedDLLs == null) LinkedDLLs = new List<string>();
             if (UserNameSearchSession == null) UserNameSearchSession = UUID.Zero;
             if (NoticeLists == null) NoticeLists = new Dictionary<string, Notices>();
             if (NoticeSessions == null) NoticeSessions = new Dictionary<UUID, NoticeCreationSessions>();

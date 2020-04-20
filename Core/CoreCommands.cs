@@ -237,12 +237,6 @@ namespace OpenCollarBot
         }
 
 
-        [CommandGroup("assign", 75, 1, "assign [DLL Name] - Sets the active DLL", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void SetActiveProgram(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            MHE(MessageHandler.Destinations.DEST_ACTION, UUID.Zero, "{\"type\":\"assignProgram\",\"newProgram\":\"" + additionalArgs[0] + "\"}");
-        }
-
 
         [CommandGroup("clear_queue", 3, 0, "clear_queue - Full Queue Reset", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP )]
         public void ClearQueue(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
@@ -251,35 +245,6 @@ namespace OpenCollarBot
             MHE(source, client, "Acknowledged! Cleared the queue!");
         }
 
-        [CommandGroup("load_dll", 5, 1, "load_dll [DLL_Name] - Loads a DLL and searches for entry points", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void load_DLL(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            // Load DLL
-            OCBotMemory ocb = OCBotMemory.Memory;
-
-            ocb.LinkedDLLs.Add(additionalArgs[0]);
-            Dictionary<string, string> cmd = new Dictionary<string, string>();
-            cmd.Add("type", "load_program");
-            cmd.Add("newProgram", additionalArgs[0]);
-            string strCmd = JsonConvert.SerializeObject(cmd);
-            MHE(MessageHandler.Destinations.DEST_ACTION, UUID.Zero, strCmd);
-
-            ocb.Save();
-        }
-
-
-        [CommandGroup("unload_dll", 5, 1, "unload_dll [DLL_Name] - Prevents DLL from reloading at next reboot", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void unload_DLL(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            // Load DLL
-            OCBotMemory ocb = OCBotMemory.Memory;
-
-            ocb.LinkedDLLs.Remove(additionalArgs[0]);
-
-            MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "DLL marked for unload at next bot restart");
-
-            ocb.Save();
-        }
 
 
 
@@ -546,46 +511,6 @@ namespace OpenCollarBot
             foreach (string V in outputLst) { outputFinal += V; }
             MHE(source, agentKey, "Hi! I was able to generate this, I hope you like it!\n \n" + outputFinal);
 
-        }
-
-
-        [CommandGroup("getident", 0, 0, "getident - Prints the bot's unique ID", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        [CommandGroup("test_default_lic", 5, 0, "test_default_lic - Generates the default license key for this sytem", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void test_default_lic(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            //License LIC = new License();
-            //LIC.NewKey();
-
-            //LIC.InitUniqueMachine();
-
-            //MHE(source, client, "Ident: " + LIC.Key);
-        }
-
-
-        [CommandGroup("test_lic", 5, 2, "test_lic [LICCode] [existingCode] - Tests license gen", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void test_lic(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            //License LIC = new License();
-            //LIC.NewKey();
-            //LIC.SetKey(additionalArgs[1]);
-
-            //LIC.Key = additionalArgs[0];
-            //MHE(source, client, "Final key: " + LIC.Key);
-        }
-
-
-        [CommandGroup("default_lic", 5, 0, "default_lic - Defaults license gen", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void default_lic(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            //License LIC = new License();
-            //LIC.NewKey();
-            //MHE(source, client, "Final key: " + LIC.Key);
         }
 
 

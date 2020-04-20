@@ -105,17 +105,6 @@ namespace OpenCollarBot
 
             if (BMem.GroupKey != UUID.Zero) grid.Groups.ActivateGroup(BMem.GroupKey);
 
-            if (BMem.LinkedDLLs.Count > 0)
-            {
-                foreach (string DLL in BMem.LinkedDLLs)
-                {
-                    Dictionary<string, string> LoaderCommandObj = new Dictionary<string, string>();
-                    LoaderCommandObj.Add("type", "load_program");
-                    LoaderCommandObj.Add("newProgram", DLL);
-                    string LoaderCmd = JsonConvert.SerializeObject(LoaderCommandObj);
-                    MHE(MessageHandler.Destinations.DEST_ACTION, UUID.Zero, LoaderCmd);
-                }
-            }
 
 
             client.Self.ScriptDialog += onScriptDialog;

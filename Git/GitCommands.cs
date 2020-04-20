@@ -251,41 +251,6 @@ namespace OpenCollarBot
         }
 
 
-        [CommandGroup("webhook_auth", 4, 2, "webhook_auth [github_name] [y/n]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void WebHookAuthMgr(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            OCBotMemory ocb = OCBotMemory.Memory;
-
-            MHE(source, client, "Checking..");
-
-            if (ocb.Authed(additionalArgs[0]))
-            {
-                if (additionalArgs[1] == "y")
-                {
-                    MHE(source, client, "Not modified. Already authorized");
-                }
-                else
-                {
-                    MHE(source, client, "Authorization revoked - git alerts from this user will not be whitelisted");
-                    ocb.AuthedGithubUsers.Remove(additionalArgs[0]);
-                }
-            }
-            else
-            {
-                if (additionalArgs[1] == "y")
-                {
-                    ocb.AuthedGithubUsers.Add(additionalArgs[0]);
-                    MHE(source, client, "Authorized.");
-                }
-                else
-                {
-                    MHE(source, client, "Not modified. Already  not whitelisted");
-                }
-            }
-
-
-            ocb.Save();
-        }
         public void FeatureResponse(UUID from, UUID agent, int reportStage, string reply, MessageHandler.Destinations source, MessageHandler.MessageHandleEvent MHE, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -382,7 +347,7 @@ namespace OpenCollarBot
                 {
                     if (item.Value == "issues")
                     {
-                        if (!ocb.Authed(Convert.ToString(stuff.issue.user.login))) return;
+                        if (!MainConfiguration.Instance.Authed(Convert.ToString(stuff.issue.user.login))) return;
 
                         int Issue_Number = Convert.ToInt32(stuff.issue.number);
                         string HTMLUrl = Convert.ToString(stuff.issue.html_url);
@@ -408,7 +373,7 @@ namespace OpenCollarBot
                     else if (item.Value == "issue_comment")
                     {
 
-                        if (!ocb.Authed(Convert.ToString(stuff.comment.user.login))) return;
+                        if (!MainConfiguration.Instance.Authed(Convert.ToString(stuff.comment.user.login))) return;
                         if (stuff.action == "created" || stuff.action == "edited")
                         {
                             int Issue_Number = Convert.ToInt32(stuff.issue.number);
@@ -420,7 +385,7 @@ namespace OpenCollarBot
                     else if (item.Value == "push")
                     {
 
-                        if (!ocb.Authed(Convert.ToString(stuff.pusher.name))) return;
+                        if (!MainConfiguration.Instance.Authed(Convert.ToString(stuff.pusher.name))) return;
                         int I = 0;
                         bool loop = true;
                         while (loop)
@@ -489,21 +454,6 @@ namespace OpenCollarBot
             }
         }
 
-        [CommandGroup("ls_replay", 5, 0, "ls_replay - Lists all available replay data files", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void ListReplays(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            // List all replay files!
-            DirectoryInfo DI = new DirectoryInfo("request_log");
-            MHE(source, client, "Listing all replay files.\n \n[Warning: Do not include '.bdf' when requesting replay]");
-            foreach (FileInfo fi in DI.GetFiles())
-            {
-                if (fi.Name.EndsWith("bdf"))
-                    MHE(source, client, "Replay Entry: " + fi.Name.Substring(0, fi.Name.Length - 4));
-                else
-                    MHE(source, client, "WARNING: A non-BDF is in the replay folder: " + fi.Name);
-            }
-            MHE(source, client, "Done listing replay files");
-        }
 
 
 
