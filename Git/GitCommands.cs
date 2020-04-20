@@ -11,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bot;
-using OpenCollarBot.Git;
 using Newtonsoft.Json;
 using OpenMetaverse;
 using Bot.CommandSystem;
@@ -362,16 +361,10 @@ namespace OpenCollarBot
             ocb.Save();
         }
 
-        public HttpListener listener;
         public MessageHandler.MessageHandleEvent MHEx;
 
         public GitCommands() { }
 
-        public GitCommands(HttpListener listen, MessageHandler.MessageHandleEvent MH)
-        {
-            listener = listen;
-            MHEx = MH;
-        }
 
         public static void Process(string Response, string GHEvent, MessageHandler.MessageHandleEvent MHE)
         {
@@ -495,52 +488,6 @@ namespace OpenCollarBot
                 MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "Wrote JSON to local file [replay.txt]");
             }
         }
-        public void OnWebHook(IAsyncResult ar)
-        {
-            HttpListenerContext CTX = null;
-            try
-            {
-                CTX = listener.EndGetContext(ar);
-            }catch(Exception e)
-            {
-                BotSession.Instance.Logger.info(log:"ERROR: Getting the end context for the listener failed");
-                return;
-            }
-            listener.BeginGetContext(OnWebHook, null);
-
-
-            Stream body = CTX.Request.InputStream;
-            StreamReader SR = new StreamReader(body, CTX.Request.ContentEncoding);
-            string Response = SR.ReadToEnd();
-
-            if (!Directory.Exists("request_log")) Directory.CreateDirectory("request_log");
-
-            RequestLog RL = new RequestLog();
-
-            string RequestPath = CTX.Request.RawUrl;
-            if (RequestPath.EndsWith("/")) RequestPath = RequestPath.Substring(0, RequestPath.Length - 1);
-
-            RL.ConfigFor = "requests";
-            RequestLog.HTTPData HD = new RequestLog.HTTPData();
-            string CustomReplyStr = "";
-
-            WebhookRegistry.HTTPResponseData reply = WebhookRegistry.Instance.RunCommand(RequestPath, Response, CTX.Request.Headers, CTX.Request.HttpMethod);
-
-
-            CustomReplyStr = reply.ReplyString;
-            byte[] buffer = Encoding.UTF8.GetBytes("\n" + CustomReplyStr);
-            CTX.Response.ContentLength64 = buffer.Length;
-            CTX.Response.AddHeader("Server", "1.6");
-            CTX.Response.StatusCode = reply.Status;
-            if(reply.ReturnContentType!= "" && reply.ReturnContentType != null)
-            {
-                CTX.Response.ContentType = reply.ReturnContentType;
-            }
-            Stream output = CTX.Response.OutputStream;
-            output.Write(buffer, 0, buffer.Length);
-            output.Close();
-
-        }
 
         [CommandGroup("ls_replay", 5, 0, "ls_replay - Lists all available replay data files", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
         public void ListReplays(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
@@ -558,79 +505,6 @@ namespace OpenCollarBot
             MHE(source, client, "Done listing replay files");
         }
 
-
-        [CommandGroup("replay", 75, 1, "replay [date_code] - Replays a git request", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]
-        public void DoReplay(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
-        {
-            RequestLog RL = null;
-            RequestLog.HTTPData HD = new RequestLog.HTTPData();
-            try
-            {
-
-                RL = RequestLog.Reload(additionalArgs[0]);
-            }
-            catch (Exception E)
-            {
-                MHE(source, client, "Exception while initializing RequestLog Handler\n[" + E.Message + "]\nSTACK: " + E.StackTrace);
-                return;
-            }
-
-            try
-            {
-                MHE(source, client, "Replaying " + additionalArgs[0] + ".bdf");
-                MHE(source, client, "HTTPData contains " + RL.logged_data.Count.ToString() + " values");
-                if (RL.logged_data.Count == 0)
-                {
-                    return;
-                }
-                HD = RL.logged_data[0];
-                FileInfo fi = new FileInfo("request_log/" + additionalArgs[0] + ".bdf");
-                MHE(source, client, "BDF size is " + fi.Length.ToString());
-                if (HD.GitEventHeader == null)
-                {
-
-                    MHE(source, client, "FATAL: HttpHeaders appears to contain nothing. ");
-                    return;
-                }
-
-
-
-                MHE(source, client, "KVP|Headers [X-Github-Event] " + HD.GitEventHeader);
-
-                MHE(source, client, "DICTIONARY LENGTH OF REQUEST BODY: " + HD.body.Length);
-                if (HD.body.Length == 0)
-                {
-                    MHE(source, client, "FATAL: Cannot proceed with a 0 size dictionary");
-                    return;
-                }
-                MHE(source, client, "Sending to WebHook_Processor");
-
-
-            }
-            catch (NullReferenceException ne)
-            {
-                MHE(source, client, "A object or value was null and caused an exception while reading or displaying data from a BDF: " + ne.Message + "\n \n[Stack] " + ne.StackTrace);
-                return;
-            }
-            catch (Exception e)
-            {
-
-                MHE(source, client, "Exception while trying to display data from BDF: " + e.Message + "\n \nStack: " + e.StackTrace);
-                return;
-            }
-
-
-            try
-            {
-
-                Process(HD.body, HD.GitEventHeader, MHE);
-            }
-            catch (Exception e)
-            {
-                MHE(source, client, "Exception caught while trying to load Webhook Processor: " + e.Message + "\n \nStack: " + e.StackTrace);
-                return;
-            }
-        }
 
 
         [CommandGroup("comment", 0, 1, "comment [ticket_number] - Comments on a ticket number", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP)]

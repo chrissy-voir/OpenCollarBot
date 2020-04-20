@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
+using Bot.WebHookServer;
 
 namespace OpenCollarBot.Webhooks
 {

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using Bot.CommandSystem;
-using Bot;
-using OpenMetaverse;
-using OpenCollarBot.Webhooks;
 using System.Collections.Specialized;
+using Bot.WebHookServer;
 
 namespace OpenCollarBot
 {
