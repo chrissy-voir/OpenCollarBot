@@ -69,7 +69,7 @@ namespace OpenCollarBot.Staff
                 if (Tolerance > 0)
                 {
                     // Less than 4 failed checks.
-                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_GROUP, OCBotMemory.Memory.StaffGroup, "[SpamWatchdog] Suspected spam has been detected for pattern '"+KVP.Key+"'");
+                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_GROUP, OCBotMemory.Memory.StaffGroup, "[SpamWatchdog] Suspected spam has been detected for pattern '"+KVP.Key+"'. This alert was triggered by '"+agentName+"'");
                 }
             }
 
