@@ -103,6 +103,8 @@ namespace OpenCollarBot
 
         public string gitowner { get; set; }
 
+        public Dictionary<string,string> SpamWatchdogPatterns { get; set; }
+
         [Serializable()]
         public struct ZInventoryItem
         {
@@ -315,6 +317,7 @@ namespace OpenCollarBot
         public void CheckIntegrity()  // NEEDED TO ENSURE WE DO NOT RUN INTO NULL VALUES DURING RUNTIME OPERATION
         {
             if (Data == null) Data = new List<string>();
+            if (SpamWatchdogPatterns == null) SpamWatchdogPatterns = new Dictionary<string, string>();
             if (DefaultLocation == null) DefaultLocation = Vector3.Zero;
             if (DefaultRegion == null) DefaultRegion = "";
             if (sit_cube == null) sit_cube = UUID.Zero;
