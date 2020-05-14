@@ -26,8 +26,3 @@ jobs:
       run: cd ..; git clone https://github.com/zontreck/BotCore5 Bot;cd Bot; git submodule update --init --recursive; dotnet restore; cd ../OpenCollarBot
     - name: Build
       run: dotnet build --configuration Release
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: artifact
-        path: bin/Release/OCB/netcoreapp3.0/
