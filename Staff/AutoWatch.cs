@@ -6,6 +6,7 @@ using Bot.CommandSystem;
 using OpenMetaverse;
 using Bot.NonCommands;
 using System.Linq;
+using System.Drawing.Imaging;
 
 namespace OpenCollarBot.Staff
 {
@@ -16,7 +17,7 @@ namespace OpenCollarBot.Staff
     {
         public string ProgramName => "AutoWatch";
 
-        public float ProgramVersion => 1.0f;
+        public float ProgramVersion => 1.2f;
 
         public string getTick()
         {
@@ -56,20 +57,51 @@ namespace OpenCollarBot.Staff
             foreach(KeyValuePair<string,string> KVP in OCBotMemory.Memory.SpamWatchdogPatterns)
             {
                 string[] PatternChecks = KVP.Value.Split(new[] { '|' });
-                int Tolerance = 4;
-                foreach(string S in PatternChecks)
+                bool C = true;
+                if (text.Length < PatternChecks.Length || text.Length < 4) C = false ;
+                if (C)
                 {
-                    if (!text.Contains(S.ToLower()))
+
+                    int Tolerance = 4;
+                    foreach (string S in PatternChecks)
                     {
-                        Tolerance--;
+                        if (!text.Contains(S.ToLower()))
+                        {
+                            Tolerance--;
+                        }
+
                     }
 
+                    if (Tolerance > 0)
+                    {
+                        // Less than 4 failed checks.
+                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_GROUP, OCBotMemory.Memory.StaffGroup, "[SpamWatchdog] Suspected spam has been detected for pattern '" + KVP.Key + "'. This alert was triggered by '" + agentName + "'");
+                    }
                 }
+            }
 
-                if (Tolerance > 0)
+
+            foreach(KeyValuePair<string,ReplacePattern> KVP in OCBotMemory.Memory.AutoReplyWatchPatterns)
+            {
+                int Tolerance = KVP.Value.Tolerance;
+                string[] Pattern = KVP.Value.Triggers.Split(new[] { '|' });
+                bool C = true;
+                if (text.Length <= Tolerance || text.Length <= Pattern.Length) C=false;
+                if (C)
                 {
-                    // Less than 4 failed checks.
-                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_GROUP, OCBotMemory.Memory.StaffGroup, "[SpamWatchdog] Suspected spam has been detected for pattern '"+KVP.Key+"'. This alert was triggered by '"+agentName+"'");
+
+                    foreach (string S in Pattern)
+                    {
+                        if (!text.Contains(S.ToLower()))
+                        {
+                            Tolerance--;
+                        }
+                    }
+
+                    if (Tolerance > 0)
+                    {
+                        BotSession.Instance.MHE(src, originator, KVP.Value.Reply);
+                    }
                 }
             }
 
@@ -150,6 +182,82 @@ namespace OpenCollarBot.Staff
             }
 
             MHE(source, client, "[SpamWatchdog] Operations completed");
+        }
+
+        [Serializable()]
+        public struct ReplacePattern
+        {
+            public string Triggers;
+            public int Tolerance;
+            public string Reply;
+
+            public string AsString()
+            {
+                return "\nTriggers: " + Triggers + "\nTolerance: " + Tolerance.ToString() + "\nReply: " + Reply;
+            }
+        }
+
+
+        [CommandGroup("reply_watch", 5, 4, "reply_watch [ReplacerLabel] [pattern:PipeDelimiter] [int:Tolerance] [replyPattern:Underscore_As_Spaces]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_DISCORD | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_CONSOLE_INFO)]
+        public void reply_watch(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "[ReplyWatchdog] Pattern add in progress");
+            if (OCBotMemory.Memory.AutoReplyWatchPatterns.ContainsKey(additionalArgs[0]))
+            {
+                ReplacePattern pttrn = OCBotMemory.Memory.AutoReplyWatchPatterns[additionalArgs[0]];
+                pttrn.Triggers = additionalArgs[1];
+                pttrn.Tolerance = Convert.ToInt32(additionalArgs[2]);
+                pttrn.Reply = additionalArgs[3].Replace('_', ' ');
+
+                OCBotMemory.Memory.AutoReplyWatchPatterns[additionalArgs[0]] = pttrn;
+            }
+            else
+            {
+                ReplacePattern ptrn = new ReplacePattern();
+                ptrn.Triggers = additionalArgs[1];
+                ptrn.Tolerance = Convert.ToInt32(additionalArgs[2]);
+                ptrn.Reply = additionalArgs[3].Replace('_',' ');
+
+                OCBotMemory.Memory.AutoReplyWatchPatterns.Add(additionalArgs[0], ptrn);
+            }
+
+            OCBotMemory.Memory.Save();
+
+            MHE(source, client, "[ReplyWatchdog] Pattern add completed");
+        }
+
+
+        [CommandGroup("rem_reply_watch", 5, 1, "rem_reply_watch [ReplacerLabel]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_DISCORD | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_CONSOLE_INFO)]
+        public void RMreply_watch(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "[ReplyWatchdog] Pattern removal in progress");
+            if (OCBotMemory.Memory.AutoReplyWatchPatterns.ContainsKey(additionalArgs[0]))
+            {
+                OCBotMemory.Memory.AutoReplyWatchPatterns.Remove(additionalArgs[0]);
+            }
+            OCBotMemory.Memory.Save();
+
+            MHE(source, client, "[ReplyWatchdog] Pattern removal completed");
+        }
+
+
+        [CommandGroup("ls_reply_watch", 2, 0, "ls_reply_watch - Lists reply watchdog", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_DISCORD | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_CONSOLE_INFO)]
+        public void lswatch_for_reply(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "[ReplyWatchdog] Listing watchdogs");
+
+            foreach (KeyValuePair<string, ReplacePattern> kvp in OCBotMemory.Memory.AutoReplyWatchPatterns)
+            {
+                MHE(source, client, "[WATCHDOG] " + kvp.Key + "\t\t-\t\t" + kvp.Value.AsString());
+            }
+
+            MHE(source, client, "[ReplyWatchdog] Operations completed");
         }
     }
 }

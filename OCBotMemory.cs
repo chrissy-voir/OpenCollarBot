@@ -13,8 +13,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Bot;
 using OpenMetaverse;
-
-
+using OpenCollarBot.Staff;
 
 namespace OpenCollarBot
 {
@@ -104,6 +103,8 @@ namespace OpenCollarBot
         public string gitowner { get; set; }
 
         public Dictionary<string,string> SpamWatchdogPatterns { get; set; }
+
+        public Dictionary<string,AutoWatch.ReplacePattern> AutoReplyWatchPatterns { get; set; }
 
         [Serializable()]
         public struct ZInventoryItem
@@ -320,6 +321,7 @@ namespace OpenCollarBot
             if (SpamWatchdogPatterns == null) SpamWatchdogPatterns = new Dictionary<string, string>();
             if (DefaultLocation == null) DefaultLocation = Vector3.Zero;
             if (DefaultRegion == null) DefaultRegion = "";
+            if (AutoReplyWatchPatterns == null) AutoReplyWatchPatterns = new Dictionary<string, AutoWatch.ReplacePattern>();
             if (sit_cube == null) sit_cube = UUID.Zero;
             if (GroupKey == null) GroupKey = UUID.Zero;
             if (InviteLastSent == null) InviteLastSent = DateTime.Now;
