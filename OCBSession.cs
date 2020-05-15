@@ -5,9 +5,11 @@ Licensed under the AGPLv3
 
 */
 
+using OpenMetaverse;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace OpenCollarBot
 {
@@ -37,5 +39,9 @@ namespace OpenCollarBot
         // This file is for volatile information. 
         // If we do not care about it persisting, it will be stored here!
         public Dictionary<int, Program.ScriptDialogSession> ScriptSessions = new Dictionary<int, Program.ScriptDialogSession>();
+
+        public ManualResetEvent MemberLookupRE = new ManualResetEvent(false);
+        public Dictionary<UUID, GroupMember> GroupMembers = new Dictionary<UUID, GroupMember>();
+        public UUID MemberLookupRequest = UUID.Zero;
     }
 }

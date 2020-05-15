@@ -82,6 +82,7 @@ namespace OpenCollarBot
             grid = client;
             grid.Inventory.InventoryObjectOffered += On_NewInventoryOffer;
             grid.Groups.GroupRoleDataReply += CacheGroupRoles;
+            grid.Groups.GroupMembersReply += Groups_GroupMembersReply;
 
             LastScheduleCheck = DateTime.Now - TimeSpan.FromMinutes(5);
             Log = BotSession.Instance.Logger;
@@ -109,6 +110,24 @@ namespace OpenCollarBot
 
             client.Self.ScriptDialog += onScriptDialog;
         }
+
+        private void Groups_GroupMembersReply(object sender, GroupMembersReplyEventArgs e)
+        {
+            if (e.RequestID != OCBSession.Instance.MemberLookupRequest) return;
+
+
+            foreach (KeyValuePair<UUID, GroupMember> kvp in e.Members)
+            {
+                
+                //BotSession.Instance.MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, $"[DEBUG] secondlife:///app/agent/{kvp.Key.ToString()}/about - {kvp.Value.OnlineStatus}");
+                if(OCBSession.Instance.GroupMembers.ContainsKey(kvp.Key)==false)
+                    OCBSession.Instance.GroupMembers.Add(kvp.Key, kvp.Value);
+            }
+
+            OCBSession.Instance.MemberLookupRE.Set();
+
+        }
+
         public class ScriptDialogSession
         {
             public UUID ObjectKey = UUID.Zero;
