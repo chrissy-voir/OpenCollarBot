@@ -17,7 +17,7 @@ namespace OpenCollarBot.Staff
     {
         public string ProgramName => "AutoWatch";
 
-        public float ProgramVersion => 1.2f;
+        public float ProgramVersion => 1.3f;
 
         public string getTick()
         {
@@ -80,6 +80,19 @@ namespace OpenCollarBot.Staff
                 }
             }
 
+            if (OCBSession.Instance.RepliedTimes.ContainsKey(User))
+            {
+                if(DateTime.Now >= OCBSession.Instance.RepliedTimes[User])
+                {
+                    OCBSession.Instance.RepliedTimes.Remove(User);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            OCBSession.Instance.RepliedTimes.Add(User, DateTime.Now.AddHours(1));
 
             foreach(KeyValuePair<string,ReplacePattern> KVP in OCBotMemory.Memory.AutoReplyWatchPatterns)
             {
