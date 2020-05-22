@@ -116,6 +116,8 @@ namespace OpenCollarBot
         public Dictionary<string, ZInventoryItem> DevelopmentBuildInventory { get; set; }
         public UUID DevelopmentBuildMaster { get; set; }
 
+
+        public Dictionary<UUID, DateTime> RepliedTimes = new Dictionary<UUID, DateTime>();
         [Serializable()]
         public struct RateData
         {
@@ -339,6 +341,7 @@ namespace OpenCollarBot
             if (NoticeSessions == null) NoticeSessions = new Dictionary<UUID, NoticeCreationSessions>();
             if (DevelopmentBuildInventory == null) DevelopmentBuildInventory = new Dictionary<string, ZInventoryItem>();
             if (DevelopmentBuildMaster == null) DevelopmentBuildMaster = new UUID();
+            if (RepliedTimes == null) RepliedTimes = new Dictionary<UUID, DateTime>();
             if (StaffGroup == null) StaffGroup = new UUID();
         }
     }

@@ -43,7 +43,5 @@ namespace OpenCollarBot
         public ManualResetEvent MemberLookupRE = new ManualResetEvent(false);
         public Dictionary<UUID, GroupMember> GroupMembers = new Dictionary<UUID, GroupMember>();
         public UUID MemberLookupRequest = UUID.Zero;
-
-        public Dictionary<UUID, DateTime> RepliedTimes = new Dictionary<UUID, DateTime>();
     }
 }

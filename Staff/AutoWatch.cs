@@ -80,11 +80,11 @@ namespace OpenCollarBot.Staff
                 }
             }
 
-            if (OCBSession.Instance.RepliedTimes.ContainsKey(User))
+            if (OCBotMemory.Memory.RepliedTimes.ContainsKey(User))
             {
-                if(DateTime.Now >= OCBSession.Instance.RepliedTimes[User])
+                if(DateTime.Now >= OCBotMemory.Memory.RepliedTimes[User])
                 {
-                    OCBSession.Instance.RepliedTimes.Remove(User);
+                    OCBotMemory.Memory.RepliedTimes.Remove(User);
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace OpenCollarBot.Staff
                 }
             }
 
-            OCBSession.Instance.RepliedTimes.Add(User, DateTime.Now.AddHours(1));
+            OCBotMemory.Memory.RepliedTimes.Add(User, DateTime.Now.AddHours(1));
 
             foreach(KeyValuePair<string,ReplacePattern> KVP in OCBotMemory.Memory.AutoReplyWatchPatterns)
             {
