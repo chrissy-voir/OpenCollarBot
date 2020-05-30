@@ -221,7 +221,7 @@ namespace OpenCollarBot
             newCache.GroupID = e.GroupID;
             newCache.Save(e.GroupID.ToString());
             RoleReply.Set();
-            FileInfo fi = new FileInfo("GroupCache/" + e.GroupID.ToString() + ".bdf");
+            FileInfo fi = new FileInfo("GroupCache/" + e.GroupID.ToString() + ".json");
 
             //MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "[debug] Roles for secondlife:///app/group/" + e.GroupID.ToString() + "/about have been saved to: GroupCache/" + e.GroupID.ToString() + ".bdf\nFileSize: "+fi.Length.ToString(), 55);
 

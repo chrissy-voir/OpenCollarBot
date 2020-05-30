@@ -186,23 +186,20 @@ namespace OpenCollarBot
         [CommandGroup("!invite", 4, 2, "!invite [uuid_group] [uuid_person] - Offers a group invite to a person", MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
         public void InviteToGroup(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
-            MHE(source, client, "Stand by..");
             OCGroupCaches gc = new OCGroupCaches();
             UUID groupID = UUID.Parse(additionalArgs[0]);
             UUID user = UUID.Parse(additionalArgs[1]);
 
-            if (!File.Exists("GroupCache/" + additionalArgs[0] + ".bdf"))
+            
+            if (!File.Exists("GroupCache/" + additionalArgs[0] + ".json"))
             {
-
-                MHE(source, client, "Error: Caches for that group ID do not exist. Resetting cache download");
-
+                
                 grid.Groups.RequestGroupRoles(groupID);
             }
             List<UUID> roles = new List<UUID>();
             roles.Add(UUID.Zero);
             grid.Groups.Invite(groupID, roles, user);
 
-            MHE(source, client, "Invitation sent!");
 
         }
 

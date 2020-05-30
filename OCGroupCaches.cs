@@ -55,7 +55,7 @@ namespace OpenCollarBot
 
         public static OCGroupCaches Reload(string CustomName)
         {
-            if (!File.Exists("GroupCache/" + CustomName + ".bdf")) return new OCGroupCaches();
+            if (!File.Exists("GroupCache/" + CustomName + ".json")) return new OCGroupCaches();
             SerialManager sm = new SerialManager();
             OCGroupCaches ocb = sm.Read<OCGroupCaches>("GroupCache/" + CustomName);
             if (ocb == null)
