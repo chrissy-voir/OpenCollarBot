@@ -138,8 +138,8 @@ namespace OpenCollarBot.Staff
             MHE(source, client, "[SpamWatchdog] Stand by");
             if( OCBotMemory.Memory.SpamWatchdogPatterns.ContainsKey(additionalArgs[0]) )
             {
-                MHE(source, client, "[SpamWatchdog] Adding the new watch terms to Ident '" + additionalArgs[1] + "'");
-
+                MHE(source, client, "[SpamWatchdog] Adding the new watch terms to Ident '" + additionalArgs[0] + "'");
+                additionalArgs[1] = additionalArgs[1].Replace("&", " ");
                 string[] Pattern = OCBotMemory.Memory.SpamWatchdogPatterns[additionalArgs[0]].Split(new[] { '|' });
                 string[] Pattern2 = additionalArgs[1].Split(new[] { '|' });
                 List<string> Patterns = new List<string>();
@@ -230,9 +230,11 @@ namespace OpenCollarBot.Staff
             if (OCBotMemory.Memory.AutoReplyWatchPatterns.ContainsKey(additionalArgs[0]))
             {
                 ReplacePattern pttrn = OCBotMemory.Memory.AutoReplyWatchPatterns[additionalArgs[0]];
+                additionalArgs[1] = additionalArgs[1].Replace('&', ' ');
                 pttrn.Triggers = additionalArgs[1];
                 pttrn.Tolerance = Convert.ToInt32(additionalArgs[2]);
                 pttrn.Reply = additionalArgs[3].Replace('_', ' ');
+                
 
                 OCBotMemory.Memory.AutoReplyWatchPatterns[additionalArgs[0]] = pttrn;
             }
