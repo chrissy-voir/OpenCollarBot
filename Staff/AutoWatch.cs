@@ -22,6 +22,16 @@ namespace OpenCollarBot.Staff
         public string getTick()
         {
             // Equivalent of a game tick
+            foreach(UUID ID in OCBSession.Instance.RemoveReplyHandle)
+            {
+                if (OCBotMemory.Memory.RepliedTimes.ContainsKey(ID))
+                {
+                    OCBotMemory.Memory.RepliedTimes.Remove(ID);
+                    OCBotMemory.Memory.Save();
+                }
+            }
+
+            OCBSession.Instance.RemoveReplyHandle.Clear();
             return "";
         }
 

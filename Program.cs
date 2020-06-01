@@ -45,8 +45,15 @@ namespace OpenCollarBot
             GroupSystem.PerformCheck(grid, LastScheduleCheck, MHE);
 
             if (DateTime.Now > LastScheduleCheck) LastScheduleCheck = DateTime.Now + TimeSpan.FromMinutes(5);
-
-
+            
+            foreach(KeyValuePair<UUID,DateTime> kvp in OCBotMemory.Memory.RepliedTimes)
+            {
+                if(DateTime.Now > kvp.Value)
+                {
+                    if(OCBSession.Instance.RemoveReplyHandle.Contains(kvp.Key)==false)
+                        OCBSession.Instance.RemoveReplyHandle.Add(kvp.Key);
+                }
+            }
             BMem = OCBotMemory.Memory; // Read Singleton
             if (!BMem.iHaveBeenTeleported)
             {
