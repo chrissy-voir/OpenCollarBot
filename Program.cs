@@ -46,13 +46,25 @@ namespace OpenCollarBot
 
             if (DateTime.Now > LastScheduleCheck) LastScheduleCheck = DateTime.Now + TimeSpan.FromMinutes(5);
             
-            foreach(KeyValuePair<UUID,DateTime> kvp in OCBotMemory.Memory.RepliedTimes)
+            foreach(KeyValuePair<UUID,OCBotMemory.ReplyData> kvp in OCBotMemory.Memory.AntiSpamReply)
             {
-                if(DateTime.Now > kvp.Value)
+                if (kvp.Value.Ignore) continue; // This will not get reset here
+
+                if(kvp.Value.InitialReply.AddMinutes(OCBotMemory.Memory.REPLY_BLOCK_EXPIRE.TotalMinutes) <= DateTime.Now)
                 {
-                    if(OCBSession.Instance.RemoveReplyHandle.Contains(kvp.Key)==false)
-                        OCBSession.Instance.RemoveReplyHandle.Add(kvp.Key);
+                    if(kvp.Value.TriggerCount < OCBotMemory.Memory.MAX_TRIGGERS)
+                    {
+                        // add to removal queue
+                        if (OCBSession.Instance.RemoveReplyHandle.Contains(kvp.Key) == false)
+                            OCBSession.Instance.RemoveReplyHandle.Add(kvp.Key);
+                    }
+                    else
+                    {
+                        kvp.Value.SetIgnore();
+                    }
                 }
+
+                
             }
             BMem = OCBotMemory.Memory; // Read Singleton
             if (!BMem.iHaveBeenTeleported)

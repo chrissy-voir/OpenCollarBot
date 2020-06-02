@@ -24,9 +24,9 @@ namespace OpenCollarBot.Staff
             // Equivalent of a game tick
             foreach(UUID ID in OCBSession.Instance.RemoveReplyHandle)
             {
-                if (OCBotMemory.Memory.RepliedTimes.ContainsKey(ID))
+                if (OCBotMemory.Memory.AntiSpamReply.ContainsKey(ID))
                 {
-                    OCBotMemory.Memory.RepliedTimes.Remove(ID);
+                    OCBotMemory.Memory.AntiSpamReply.Remove(ID);
                     OCBotMemory.Memory.Save();
                 }
             }
@@ -53,11 +53,13 @@ namespace OpenCollarBot.Staff
 
         public void run(GridClient client, MessageHandler MH, CommandRegistry registry)
         {
-            // Nothing to do here
+            // Reset the OCBotMemory Antispam list
+            OCBotMemory.Memory.AntiSpamReply = new Dictionary<UUID, OCBotMemory.ReplyData>();
+            OCBotMemory.Memory.Save();
         }
 
 
-        [NotCommand()]
+        [NotCommand(SourceType = MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_DISCORD)]
         public void RunNonCommand(string text, UUID User, string agentName, MessageHandler.Destinations src, UUID originator)
         {
             // Checks the chat data against the watchdog
@@ -90,19 +92,43 @@ namespace OpenCollarBot.Staff
                 }
             }
 
-            if (OCBotMemory.Memory.RepliedTimes.ContainsKey(User))
+            bool has_reply_data = false;
+            OCBotMemory.ReplyData reply_data = new OCBotMemory.ReplyData();
+            if (OCBotMemory.Memory.AntiSpamReply.ContainsKey(User))
             {
-                if(DateTime.Now >= OCBotMemory.Memory.RepliedTimes[User])
+                if (OCBotMemory.Memory.AntiSpamReply[User].Ignore) return;
+                reply_data = OCBotMemory.Memory.AntiSpamReply[User];
+                has_reply_data = true;
+            }
+
+
+            if (has_reply_data)
+            {
+
+                if (reply_data.TriggerCount >= OCBotMemory.Memory.MAX_TRIGGERS)
                 {
-                    OCBotMemory.Memory.RepliedTimes.Remove(User);
+                    bool save = false;
+                    if (!reply_data.Ignore) save = true;
+                    reply_data.SetIgnore();
+                    OCBotMemory.Memory.AntiSpamReply[User] = reply_data;
+
+                    if (save) OCBotMemory.Memory.Save();
                 }
                 else
                 {
-                    return;
+
+                    reply_data.TriggerCount++;
+                    OCBotMemory.Memory.AntiSpamReply[User] = reply_data;
+
+                    OCBotMemory.Memory.Save();
                 }
+            } else
+            {
+                reply_data.TriggerCount=1;
+                reply_data.InitialReply = DateTime.Now;
+                reply_data.Ignore = false;
             }
 
-            OCBotMemory.Memory.RepliedTimes.Add(User, DateTime.Now.AddHours(1));
 
             foreach(KeyValuePair<string,ReplacePattern> KVP in OCBotMemory.Memory.AutoReplyWatchPatterns)
             {
@@ -123,12 +149,35 @@ namespace OpenCollarBot.Staff
 
                     if (Tolerance > 0)
                     {
-                        BotSession.Instance.MHE(src, originator, KVP.Value.Reply);
+                        if (!reply_data.Ignore)
+                        {
+                            BotSession.Instance.MHE(src, originator, KVP.Value.Reply);
+                            if (!has_reply_data)
+                            {
+                                OCBotMemory.Memory.AntiSpamReply.Add(User, reply_data);
+                                OCBotMemory.Memory.Save();
+                            }
+
+                        }
                     }
                 }
             }
 
         }
+
+
+        [CommandGroup("reset_ignore_list",3,0,"reset_ignore_list\t\t- Resets the ignore block list", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_DISCORD | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
+        public void reset_ignore_list(UUID client, int level, GridClient grid, string[] additionalArgs,
+                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
+                                CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "Resetting ignore list");
+            OCBotMemory.Memory.AntiSpamReply = new Dictionary<UUID, OCBotMemory.ReplyData>();
+            OCBSession.Instance.RemoveReplyHandle = new List<UUID>();
+            OCBotMemory.Memory.Save();
+            MHE(source, client, "Complete!");
+        }
+
 
         [CommandGroup("spam_watch", 5, 2, "spam_watch [watch_label] [watch_for_pattern] - Watches for a specific pattern. Use a pipe delimiter to separate words", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_DISCORD | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_CONSOLE_INFO)]
         public void watch_for_spam(UUID client, int level, GridClient grid, string[] additionalArgs,

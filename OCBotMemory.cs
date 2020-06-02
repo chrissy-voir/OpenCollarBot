@@ -116,8 +116,21 @@ namespace OpenCollarBot
         public Dictionary<string, ZInventoryItem> DevelopmentBuildInventory { get; set; }
         public UUID DevelopmentBuildMaster { get; set; }
 
+        public int MAX_TRIGGERS = 3;
+        public TimeSpan REPLY_BLOCK_EXPIRE = TimeSpan.FromMinutes(30); // If not at max, then expire next relog
+        [Serializable()]
+        public struct ReplyData
+        {
+            public DateTime InitialReply;
+            public int TriggerCount;
+            public bool Ignore;
+            public void SetIgnore()
+            {
+                Ignore = true;
+            }
+        }
+        public Dictionary<UUID, ReplyData> AntiSpamReply { get; set; } = new Dictionary<UUID, ReplyData>();
 
-        public Dictionary<UUID, DateTime> RepliedTimes = new Dictionary<UUID, DateTime>();
         [Serializable()]
         public struct RateData
         {
@@ -341,7 +354,6 @@ namespace OpenCollarBot
             if (NoticeSessions == null) NoticeSessions = new Dictionary<UUID, NoticeCreationSessions>();
             if (DevelopmentBuildInventory == null) DevelopmentBuildInventory = new Dictionary<string, ZInventoryItem>();
             if (DevelopmentBuildMaster == null) DevelopmentBuildMaster = new UUID();
-            if (RepliedTimes == null) RepliedTimes = new Dictionary<UUID, DateTime>();
             if (StaffGroup == null) StaffGroup = new UUID();
         }
     }
