@@ -17,7 +17,7 @@ namespace OpenCollarBot.Staff
     {
         public string ProgramName => "AutoWatch";
 
-        public float ProgramVersion => 1.3f;
+        public float ProgramVersion => 1.4f;
 
         public string getTick()
         {
@@ -92,43 +92,6 @@ namespace OpenCollarBot.Staff
                 }
             }
 
-            bool has_reply_data = false;
-            OCBotMemory.ReplyData reply_data = new OCBotMemory.ReplyData();
-            if (OCBotMemory.Memory.AntiSpamReply.ContainsKey(User))
-            {
-                if (OCBotMemory.Memory.AntiSpamReply[User].Ignore) return;
-                reply_data = OCBotMemory.Memory.AntiSpamReply[User];
-                has_reply_data = true;
-            }
-
-
-            if (has_reply_data)
-            {
-
-                if (reply_data.TriggerCount >= OCBotMemory.Memory.MAX_TRIGGERS)
-                {
-                    bool save = false;
-                    if (!reply_data.Ignore) save = true;
-                    reply_data.SetIgnore();
-                    OCBotMemory.Memory.AntiSpamReply[User] = reply_data;
-
-                    if (save) OCBotMemory.Memory.Save();
-                }
-                else
-                {
-
-                    reply_data.TriggerCount++;
-                    OCBotMemory.Memory.AntiSpamReply[User] = reply_data;
-
-                    OCBotMemory.Memory.Save();
-                }
-            } else
-            {
-                reply_data.TriggerCount=1;
-                reply_data.InitialReply = DateTime.Now;
-                reply_data.Ignore = false;
-            }
-
 
             foreach(KeyValuePair<string,ReplacePattern> KVP in OCBotMemory.Memory.AutoReplyWatchPatterns)
             {
@@ -149,6 +112,16 @@ namespace OpenCollarBot.Staff
 
                     if (Tolerance > 0)
                     {
+                        bool has_reply_data = false;
+                        OCBotMemory.ReplyData reply_data = new OCBotMemory.ReplyData();
+                        if (OCBotMemory.Memory.AntiSpamReply.ContainsKey(User))
+                        {
+                            if (OCBotMemory.Memory.AntiSpamReply[User].Ignore) return;
+                            reply_data = OCBotMemory.Memory.AntiSpamReply[User];
+                            has_reply_data = true;
+                        }
+
+
                         if (!reply_data.Ignore)
                         {
                             BotSession.Instance.MHE(src, originator, KVP.Value.Reply);
@@ -159,6 +132,34 @@ namespace OpenCollarBot.Staff
                             }
 
                         }
+                        if (has_reply_data)
+                        {
+
+                            if (reply_data.TriggerCount >= OCBotMemory.Memory.MAX_TRIGGERS)
+                            {
+                                bool save = false;
+                                if (!reply_data.Ignore) save = true;
+                                reply_data.SetIgnore();
+                                OCBotMemory.Memory.AntiSpamReply[User] = reply_data;
+
+                                if (save) OCBotMemory.Memory.Save();
+                            }
+                            else
+                            {
+
+                                reply_data.TriggerCount++;
+                                OCBotMemory.Memory.AntiSpamReply[User] = reply_data;
+
+                                OCBotMemory.Memory.Save();
+                            }
+                        }
+                        else
+                        {
+                            reply_data.TriggerCount = 1;
+                            reply_data.InitialReply = DateTime.Now;
+                            reply_data.Ignore = false;
+                        }
+
                     }
                 }
             }

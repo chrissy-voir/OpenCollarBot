@@ -29,6 +29,13 @@ namespace OpenCollarBot
             grid.Self.Chat(agentName.Substring(0, 2) + "menu", 1, ChatType.Normal);
         }
 
+        [CommandGroup("allow_tp", 5, 0, "allow_tp", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
+        public void allow_tp(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            OCBotMemory.Memory.iHaveBeenTeleported = true;
+            MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "Allowing Manual Teleport");
+            OCBotMemory.Memory.Save();
+        }
 
         [CommandGroup("monitor_sim", 4, 1, "monitor_sim [string:SimName] - Monitors misc data about a sim every 5 seconds", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
         public void MonitorSim(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)

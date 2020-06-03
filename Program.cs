@@ -126,7 +126,8 @@ namespace OpenCollarBot
             if (BMem.GroupKey != UUID.Zero) grid.Groups.ActivateGroup(BMem.GroupKey);
 
 
-
+            BMem.iHaveBeenTeleported = false;
+            BMem.Save(); // disable on relog
             client.Self.ScriptDialog += onScriptDialog;
         }
 
