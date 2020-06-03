@@ -29,6 +29,27 @@ namespace OpenCollarBot
             grid.Self.Chat(agentName.Substring(0, 2) + "menu", 1, ChatType.Normal);
         }
 
+
+        [CommandGroup("ignore_dialogs", 5, 1, "ignore_dialogs [uuid] - Ignores script dialogs from uuid", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP)]
+        public void ignoreMenu(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "Ignoring");
+            if(!OCBotMemory.Memory.IgnoreScriptDialogsFrom.Contains(UUID.Parse(additionalArgs[0])))
+                OCBotMemory.Memory.IgnoreScriptDialogsFrom.Add(UUID.Parse(additionalArgs[0]));
+
+            OCBotMemory.Memory.Save();
+        }
+
+        [CommandGroup("unignore_dialogs", 5, 1, "unignore_dialogs [uuid] - unIgnores script dialogs from uuid", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP)]
+        public void unignoreMenu(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "unIgnoring");
+            if (OCBotMemory.Memory.IgnoreScriptDialogsFrom.Contains(UUID.Parse(additionalArgs[0])))
+                OCBotMemory.Memory.IgnoreScriptDialogsFrom.Remove(UUID.Parse(additionalArgs[0]));
+
+            OCBotMemory.Memory.Save();
+        }
+
         [CommandGroup("allow_tp", 5, 0, "allow_tp", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
         public void allow_tp(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {

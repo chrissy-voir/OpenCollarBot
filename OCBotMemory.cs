@@ -102,6 +102,8 @@ namespace OpenCollarBot
 
         public string gitowner { get; set; }
 
+        public List<UUID> IgnoreScriptDialogsFrom { get; set; } = new List<UUID>();
+
         public Dictionary<string,string> SpamWatchdogPatterns { get; set; }
 
         public Dictionary<string,AutoWatch.ReplacePattern> AutoReplyWatchPatterns { get; set; }

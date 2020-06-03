@@ -158,6 +158,7 @@ namespace OpenCollarBot
         }
         private void onScriptDialog(object sender, ScriptDialogEventArgs e)
         {
+            if (OCBotMemory.Memory.IgnoreScriptDialogsFrom.Contains(e.OwnerID)) return;
             ScriptDialogSession SDS = new ScriptDialogSession();
             SDS.ObjectKey = e.ObjectID;
             SDS.DialogPrompt = e.Message;
