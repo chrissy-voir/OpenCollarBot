@@ -108,6 +108,10 @@ namespace OpenCollarBot
 
         public Dictionary<string,AutoWatch.ReplacePattern> AutoReplyWatchPatterns { get; set; }
 
+        public bool AutoRestartSim { get; set; } = false;
+        public string RestartDay { get; set; } = "every";
+        public string TimeStringForRestart { get; set; } = "0h:0m am";
+
         [Serializable()]
         public struct ZInventoryItem
         {

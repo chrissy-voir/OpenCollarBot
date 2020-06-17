@@ -70,12 +70,76 @@ namespace OpenCollarBot
             if (!BMem.iHaveBeenTeleported)
             {
                 // check current region
-                if (grid.Network.CurrentSim.Name != BMem.DefaultRegion)
+                if(BMem.DefaultRegion != "")
                 {
-                    grid.Self.Teleport(BMem.DefaultRegion, BMem.DefaultLocation);
+
+                    if (grid.Network.CurrentSim.Name != BMem.DefaultRegion)
+                    {
+                        grid.Self.Teleport(BMem.DefaultRegion, BMem.DefaultLocation);
+                    }
                 }
 
 
+            }
+
+
+            if (BMem.AutoRestartSim)
+            {
+                // Do checks
+                DateTime timestamp = DateTime.Now;
+                bool everyDay = false;
+                DayOfWeek restarter = DayOfWeek.Monday;
+                switch (BMem.RestartDay)
+                {
+                    case "mon":
+                        restarter = DayOfWeek.Monday;
+                        break;
+                    case "tue":
+                        restarter = DayOfWeek.Tuesday;
+                        break;
+                    case "wed":
+                        restarter = DayOfWeek.Wednesday;
+                        break;
+                    case "thur":
+                        restarter = DayOfWeek.Thursday;
+                        break;
+                    case "fri":
+                        restarter = DayOfWeek.Friday;
+                        break;
+                    case "sat":
+                        restarter = DayOfWeek.Saturday;
+                        break;
+                    case "sun":
+                        restarter = DayOfWeek.Sunday;
+                        break;
+                    default:
+                        everyDay = true;
+                        break;
+                }
+
+                if (restarter == timestamp.DayOfWeek)
+                {
+                    everyDay = true; // this will keep logic to a minimum
+                }
+                if (everyDay)
+                {
+                    // do more checks
+                    string timestampStr = timestamp.ToString("hh:mm tt");
+                    timestampStr = timestampStr.ToLower();
+                    string compareStr = BMem.TimeStringForRestart;
+                    compareStr = compareStr.Replace("h", "").Replace("m", "");
+
+                    if(compareStr == timestampStr)
+                    {
+                        // restart
+                        BotSession.Instance.grid.Estate.RestartRegion();
+                        BotSession.Instance.WaitForFiveMinutes = true;
+                    }
+                }
+                else
+                {
+                    // do nothing
+                }
             }
 
             return CM.newReply;
