@@ -124,10 +124,9 @@ namespace OpenCollarBot
                 if (everyDay)
                 {
                     // do more checks
-                    string timestampStr = timestamp.ToString("hh:mm tt");
+                    string timestampStr = timestamp.ToString("hh:mmtt");
                     timestampStr = timestampStr.ToLower();
                     string compareStr = BMem.TimeStringForRestart;
-                    compareStr = compareStr.Replace("h", "").Replace("m", "");
 
                     if(compareStr == timestampStr)
                     {
