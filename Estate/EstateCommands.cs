@@ -25,11 +25,20 @@ namespace OpenCollarBot.Estate
         [CommandGroup("cancel_auto_sim_restart", 5, 0, "cancel_auto_sim_restart - Cancels the automatic restarts of the sim the bot is in", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
         public void cancel_auto_restart(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
         {
-            
+
             OCBotMemory.Memory.AutoRestartSim = false;
             OCBotMemory.Memory.RestartDay = "";
             OCBotMemory.Memory.TimeStringForRestart = "";
             OCBotMemory.Memory.Save();
+        }
+
+        
+
+        [CommandGroup("restart_sim", 5, 0, "restart_sim - Automatically restarts the sim", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
+        public void restart_sim(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        {
+            grid.Estate.RestartRegion();
+            MHE(source, client, "Restarting sim");
         }
 
     }

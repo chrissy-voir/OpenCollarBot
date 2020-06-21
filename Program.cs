@@ -70,11 +70,11 @@ namespace OpenCollarBot
             if (!BMem.iHaveBeenTeleported)
             {
                 // check current region
-                if(BMem.DefaultRegion != "")
+                if(BMem.DefaultRegion != "" && DateTime.Now > OCBSession.Instance.NextTeleportAttempt)
                 {
-
                     if (grid.Network.CurrentSim.Name != BMem.DefaultRegion)
                     {
+                        OCBSession.Instance.NextTeleportAttempt = DateTime.Now.AddMinutes(1);
                         grid.Self.Teleport(BMem.DefaultRegion, BMem.DefaultLocation);
                     }
                 }

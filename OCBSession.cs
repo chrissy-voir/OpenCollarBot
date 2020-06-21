@@ -44,5 +44,6 @@ namespace OpenCollarBot
         public Dictionary<UUID, GroupMember> GroupMembers = new Dictionary<UUID, GroupMember>();
         public UUID MemberLookupRequest = UUID.Zero;
         public List<UUID> RemoveReplyHandle = new List<UUID>();
+        internal DateTime NextTeleportAttempt;
     }
 }
