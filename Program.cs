@@ -83,8 +83,9 @@ namespace OpenCollarBot
             }
 
 
-            if (BMem.AutoRestartSim)
+            if (BMem.AutoRestartSim && !OCBSession.Instance.RestartTriggered)
             {
+                OCBSession.Instance.RestartTriggered = true;
                 // Do checks
                 DateTime timestamp = DateTime.Now;
                 bool everyDay = false;

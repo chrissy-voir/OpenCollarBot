@@ -45,5 +45,6 @@ namespace OpenCollarBot
         public UUID MemberLookupRequest = UUID.Zero;
         public List<UUID> RemoveReplyHandle = new List<UUID>();
         internal DateTime NextTeleportAttempt;
+        internal bool RestartTriggered;
     }
 }
