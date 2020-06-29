@@ -20,12 +20,12 @@ using OpenMetaverse.ImportExport.Collada14;
 
 namespace OpenCollarBot.GroupCommands
 {
-    public class GroupSystem
+    public class GroupSystem : BaseCommands
     {
-        [CommandGroup("create_notice", 5, 1, "create_notice [noticeName] - Creates a new scheduled notice", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void create_notice(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("create_notice", 5, 1, "create_notice [noticeName] - Creates a new scheduled notice", Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_LOCAL)]
+        public void create_notice(UUID client, int level,  string[] additionalArgs,
+                                Destinations source,
+                                 UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             if (ocb.NoticeSessions.ContainsKey(agentKey))
@@ -48,10 +48,10 @@ namespace OpenCollarBot.GroupCommands
             MHE(source, client, "Okay! Notice session started! To stop at any time say 'cancel'\n \n[Please submit a summary of the notice!]");
         }
 
-        [CommandGroup("modify_notice", 5, 1, "modify_notice [noticeName] - Modifies a existing notice", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void modify_existing_notice(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("modify_notice", 5, 1, "modify_notice [noticeName] - Modifies a existing notice", Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_LOCAL)]
+        public void modify_existing_notice(UUID client, int level,  string[] additionalArgs,
+                                Destinations source,
+                                 UUID agentKey, string agentName)
         {
             // This command will modify an existing notice
             if (OCBotMemory.Memory.NoticeLists.ContainsKey(additionalArgs[0]))
@@ -84,7 +84,7 @@ namespace OpenCollarBot.GroupCommands
         }
 
 
-        public void update_notice_sess(UUID fromID, UUID agentKey, string request, MessageHandler.Destinations sourceLoc, MessageHandler.MessageHandleEvent MHE, string agentName)
+        public void update_notice_sess(UUID fromID, UUID agentKey, string request, Destinations sourceLoc, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             OCBotMemory.NoticeCreationSessions nCS = ocb.NoticeSessions[agentKey];
@@ -217,10 +217,10 @@ namespace OpenCollarBot.GroupCommands
             }
         }
 
-        [CommandGroup("list_notices", 5, 0, "list_notices - List all notices", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void list_notices(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("list_notices", 5, 0, "list_notices - List all notices", Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_LOCAL)]
+        public void list_notices(UUID client, int level,  string[] additionalArgs,
+                                Destinations source,
+                                 UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             foreach (KeyValuePair<string, OCBotMemory.Notices> entry in ocb.NoticeLists)
@@ -231,10 +231,10 @@ namespace OpenCollarBot.GroupCommands
 
 
 
-        [CommandGroup("rm_notice", 5, 1, "rm_notices [noticeName] - Removes a notice", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void rm_notice(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("rm_notice", 5, 1, "rm_notices [noticeName] - Removes a notice", Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_LOCAL)]
+        public void rm_notice(UUID client, int level,  string[] additionalArgs,
+                                Destinations source,
+                                 UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             if (ocb.NoticeLists.ContainsKey(additionalArgs[0]))
@@ -246,10 +246,10 @@ namespace OpenCollarBot.GroupCommands
 
 
 
-        [CommandGroup("clear_mknotice", 5, 0, "clear_mknotice - Clears notice creator sessions", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void reset_notice_sess(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("clear_mknotice", 5, 0, "clear_mknotice - Clears notice creator sessions", Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_LOCAL)]
+        public void reset_notice_sess(UUID client, int level,  string[] additionalArgs,
+                                Destinations source,
+                                 UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -259,15 +259,15 @@ namespace OpenCollarBot.GroupCommands
         }
 
 
-        [CommandGroup("check_notices", 5, 0, "check_notices - Checks the notice queue for pending dispatches", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_LOCAL)]
-        public void check_notice_queue(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("check_notices", 5, 0, "check_notices - Checks the notice queue for pending dispatches", Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_LOCAL)]
+        public void check_notice_queue(UUID client, int level,  string[] additionalArgs,
+                                Destinations source,
+                                 UUID agentKey, string agentName)
         {
-            PerformCheck(grid, DateTime.Now - TimeSpan.FromSeconds(30), MHE);
+            PerformCheck(DateTime.Now - TimeSpan.FromSeconds(30));
         }
 
-        public static void PerformCheck(GridClient grid, DateTime LastScheduleCheck, MessageHandler.MessageHandleEvent MHE)
+        public static void PerformCheck( DateTime LastScheduleCheck)
         {
             if (DateTime.Now > LastScheduleCheck)
             {
@@ -286,18 +286,18 @@ namespace OpenCollarBot.GroupCommands
                         // Check datetime
                         if (Notice.LastSent < DateTime.Now)
                         {
-                            MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "Dispatching scheduled notice");
+                            MH(Destinations.DEST_LOCAL, UUID.Zero, "Dispatching scheduled notice");
                             // Send notice and update information
                             GroupNotice NewNotice = new GroupNotice();
                             if (Notice.HasAttachment)
                                 NewNotice.AttachmentID = Notice.NoticeAttachment;
                             else NewNotice.AttachmentID = UUID.Zero;
                             NewNotice.Message = Notice.NoticeDescription;
-                            NewNotice.OwnerID = grid.Self.AgentID;
+                            NewNotice.OwnerID = BotSession.Instance.grid.Self.AgentID;
                             NewNotice.Subject = Notice.NoticeSummary;
 
 
-                            grid.Groups.SendGroupNotice(Notice.GroupKey, NewNotice);
+                            BotSession.Instance.grid.Groups.SendGroupNotice(Notice.GroupKey, NewNotice);
 
 
                             Notice.LastSent = DateTime.Now + TimeSpan.FromDays(14);
@@ -313,13 +313,13 @@ namespace OpenCollarBot.GroupCommands
                             NewNotice.AttachmentID = Notice.NoticeAttachment;
                         else NewNotice.AttachmentID = UUID.Zero;
                         NewNotice.Message = Notice.NoticeDescription;
-                        NewNotice.OwnerID = grid.Self.AgentID;
+                        NewNotice.OwnerID = BotSession.Instance.grid.Self.AgentID;
                         NewNotice.Subject = Notice.NoticeSummary;
 
-                        grid.Groups.SendGroupNotice(Notice.GroupKey, NewNotice);
+                        BotSession.Instance.grid.Groups.SendGroupNotice(Notice.GroupKey, NewNotice);
 
                         NoticeEditQueue.Add(2, Notice); // Will delete the notice
-                        MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "Dispatching single-use notice");
+                        MH(Destinations.DEST_LOCAL, UUID.Zero, "Dispatching single-use notice");
                         break;
                     }
                 }

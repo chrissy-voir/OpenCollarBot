@@ -68,7 +68,7 @@ namespace OpenCollarBot.ScriptImporter
         public Dictionary<UUID, List<QueueType>> ActualQueue = new Dictionary<UUID,List<QueueType>>();
     }
 
-    public class QueueRunner
+    public class QueueRunner : BaseCommands
     {
         // This class executes 1 queue item when called upon
         
@@ -252,7 +252,7 @@ namespace OpenCollarBot.ScriptImporter
                                     foreach (KeyValuePair<string,UUID> kvpx in Finals.Folders)
                                     {
                                         inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
-                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
+                                        MH(Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                     }
                                     Queue.Instance.FinalQueue.Remove(Recipient);
                                 }
@@ -264,12 +264,12 @@ namespace OpenCollarBot.ScriptImporter
                                 X.ActualQueue[Recipient] = kvp.Value;
                             }
                             if(Recipient!=UUID.Zero)
-                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
+                                MH(Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
                         }
                     }else
                     {
                         if(Recipient!=UUID.Zero)
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
+                            MH(Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
                     }
                 } else if(itemType == AssetType.Notecard)
                 {
@@ -296,7 +296,7 @@ namespace OpenCollarBot.ScriptImporter
                                 foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
                                     inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
+                                    MH(Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
                                 Queue.Instance.FinalQueue.Remove(Recipient);
                             }
@@ -306,11 +306,11 @@ namespace OpenCollarBot.ScriptImporter
                             X.ActualQueue[Recipient] = kvp.Value;
                         }
                         if(Recipient != UUID.Zero)
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
+                            MH(Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
                     }else
                     {
                         if(Recipient!=UUID.Zero)
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
+                            MH(Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
                     }
                 }
             } else
@@ -329,7 +329,7 @@ namespace OpenCollarBot.ScriptImporter
                                 foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
                                     inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
+                                    MH(Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
                                 Queue.Instance.FinalQueue.Remove(Recipient);
                             }
@@ -340,7 +340,7 @@ namespace OpenCollarBot.ScriptImporter
                             X.ActualQueue[Recipient] = kvp.Value;
                         }
                         if(Recipient!=UUID.Zero)
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing - no changes needed");
+                            MH(Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing - no changes needed");
 
                     } else
                     {
@@ -369,7 +369,7 @@ namespace OpenCollarBot.ScriptImporter
                                         foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                         {
                                             inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
-                                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
+                                            MH(Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                         }
                                         Queue.Instance.FinalQueue.Remove(Recipient);
                                     }
@@ -381,12 +381,12 @@ namespace OpenCollarBot.ScriptImporter
                                     X.ActualQueue[Recipient] = kvp.Value;
                                 }
                                 if(Recipient!=UUID.Zero)
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
+                                    MH(Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
                             }
                         } else
                         {
                             if(Recipient!=UUID.Zero)
-                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
+                                MH(Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
                         }
                         
 
@@ -404,7 +404,7 @@ namespace OpenCollarBot.ScriptImporter
                                 foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                 {
                                     inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
-                                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
+                                    MH(Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                 }
                                 Queue.Instance.FinalQueue.Remove(Recipient);
                             }
@@ -416,7 +416,7 @@ namespace OpenCollarBot.ScriptImporter
                             X.ActualQueue[Recipient] = kvp.Value;
                         }
                         if(Recipient!=UUID.Zero)
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing - no changes needed");
+                            MH(Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing - no changes needed");
                     }
                     else
                     {
@@ -440,7 +440,7 @@ namespace OpenCollarBot.ScriptImporter
                                     foreach (KeyValuePair<string, UUID> kvpx in Finals.Folders)
                                     {
                                         inv.GiveFolder(kvpx.Value, kvpx.Key, Recipient, false);
-                                        BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
+                                        MH(Destinations.DEST_AGENT, Recipient, "Sending : " + kvpx.Key);
                                     }
                                     Queue.Instance.FinalQueue.Remove(Recipient);
                                 }
@@ -452,12 +452,12 @@ namespace OpenCollarBot.ScriptImporter
                                 X.ActualQueue[Recipient] = kvp.Value;
                             }
                             if(Recipient!=UUID.Zero)
-                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
+                                MH(Destinations.DEST_AGENT, Recipient, "Item '" + QT.Name + "' finished processing");
                             
                         } else
                         {
                             if(Recipient!=UUID.Zero)
-                                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
+                                MH(Destinations.DEST_AGENT, Recipient, "Item: " + QT.Name + QT.FileExt + " failed!");
                         }
                     }
                 }

@@ -21,11 +21,11 @@ namespace OpenCollarBot.Webhooks
         [WebhookAttribs("/git", HTTPMethod = "POST")]
         public WebhookRegistry.HTTPResponseData gitHook(List<string> arguments, string body, string method, NameValueCollection headers)
         {
-            GitCommands.Process(body, headers.Get("X-Github-Event"), BotSession.Instance.MHE);
+            GitCommands.Process(body, headers.Get("X-Github-Event"));
             WebhookRegistry.HTTPResponseData reply = new WebhookRegistry.HTTPResponseData();
             reply.ReplyString = "Done";
             reply.Status = 200;
-            CommandRegistry.Instance.RunCommand("refresh_git_nosend", UUID.Zero, 1000, BotSession.Instance.MHE, MessageHandler.Destinations.DEST_ACTION, UUID.Zero, "Console");
+            // removed a line here that triggered a git refresh
             return reply;
         }
 
@@ -44,7 +44,7 @@ namespace OpenCollarBot.Webhooks
             string concat = Kicked + "|" + req + "|" + KickName;
             splitter = concat.Split(new[] { '|' });
 
-            CommandRegistry.Instance.RunCommand("auto_buildnotice " + Kicked + " " + req + " " + KickName, BotSession.Instance.grid.Self.AgentID, 1000, BotSession.Instance.MHE, MessageHandler.Destinations.DEST_GROUP, BotSession.Instance.grid.Self.AgentID, BotSession.Instance.ConfigurationHandle.first + " " + BotSession.Instance.ConfigurationHandle.last);
+            CommandRegistry.Instance.RunCommand("auto_buildnotice " + Kicked + " " + req + " " + KickName, BotSession.Instance.grid.Self.AgentID, 1000, Destinations.DEST_GROUP, BotSession.Instance.grid.Self.AgentID, BotSession.Instance.ConfigurationHandle.first + " " + BotSession.Instance.ConfigurationHandle.last);
 
 
             WebhookRegistry.HTTPResponseData reply = new WebhookRegistry.HTTPResponseData();

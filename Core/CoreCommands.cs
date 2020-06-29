@@ -19,19 +19,19 @@ using System.Net;
 
 namespace OpenCollarBot
 {
-    class CoreCommands
+    class CoreCommands : BaseCommands
     {
 
-        [CommandGroup("open_collar_menu", 0, 0, "open_collar_menu - Opens your OpenCollar menu", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void GetOCMenu(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("open_collar_menu", 0, 0, "open_collar_menu - Opens your OpenCollar menu", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void GetOCMenu(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             MHE(source, client, "Requesting OpenCollar Menu");
-            grid.Self.Chat(agentName.Substring(0, 2) + "menu", 1, ChatType.Normal);
+            BotSession.Instance.grid.Self.Chat(agentName.Substring(0, 2) + "menu", 1, ChatType.Normal);
         }
 
 
-        [CommandGroup("ignore_dialogs", 5, 1, "ignore_dialogs [uuid] - Ignores script dialogs from uuid", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP)]
-        public void ignoreMenu(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("ignore_dialogs", 5, 1, "ignore_dialogs [uuid] - Ignores script dialogs from uuid", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP)]
+        public void ignoreMenu(UUID client, int level, string[] additionalArgs,Destinations source, UUID agentKey, string agentName)
         {
             MHE(source, client, "Ignoring");
             if(!OCBotMemory.Memory.IgnoreScriptDialogsFrom.Contains(UUID.Parse(additionalArgs[0])))
@@ -40,8 +40,8 @@ namespace OpenCollarBot
             OCBotMemory.Memory.Save();
         }
 
-        [CommandGroup("unignore_dialogs", 5, 1, "unignore_dialogs [uuid] - unIgnores script dialogs from uuid", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_GROUP)]
-        public void unignoreMenu(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("unignore_dialogs", 5, 1, "unignore_dialogs [uuid] - unIgnores script dialogs from uuid", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP)]
+        public void unignoreMenu(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             MHE(source, client, "unIgnoring");
             if (OCBotMemory.Memory.IgnoreScriptDialogsFrom.Contains(UUID.Parse(additionalArgs[0])))
@@ -50,16 +50,16 @@ namespace OpenCollarBot
             OCBotMemory.Memory.Save();
         }
 
-        [CommandGroup("allow_tp", 5, 0, "allow_tp", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void allow_tp(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("allow_tp", 5, 0, "allow_tp", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void allow_tp(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             OCBotMemory.Memory.iHaveBeenTeleported = true;
-            MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "Allowing Manual Teleport");
+            MHE(Destinations.DEST_LOCAL, UUID.Zero, "Allowing Manual Teleport");
             OCBotMemory.Memory.Save();
         }
 
-        [CommandGroup("monitor_sim", 4, 1, "monitor_sim [string:SimName] - Monitors misc data about a sim every 5 seconds", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void MonitorSim(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("monitor_sim", 4, 1, "monitor_sim [string:SimName] - Monitors misc data about a sim every 5 seconds", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void MonitorSim(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             string par = additionalArgs[0].Replace('_', ' ');
             OCBSession.Instance.MonitoredRegions.Add(  par);
@@ -87,21 +87,21 @@ namespace OpenCollarBot
                                 MapAgentLocation MAL = (MapAgentLocation)mp;
                                 actual += MAL.AvatarCount;
                             }
-                            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, $"[{rg.Name}] Number of avatars: {actual}; Map TextureID: {rg.MapImageID.ToString()}");
+                            MHE(Destinations.DEST_LOCAL, UUID.Zero, $"[{rg.Name}] Number of avatars: {actual}; Map TextureID: {rg.MapImageID.ToString()}");
 
 
                         }
                     }
                 }
-                BotSession.Instance.MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "No more monitored regions. Closing watchdog");
+                MHE(Destinations.DEST_LOCAL, UUID.Zero, "No more monitored regions. Closing watchdog");
                 return;
             });
 
             X.Start();
         }
 
-        [CommandGroup("get_region_texture", 0, 1, "get_region_texture [sim_name] - prints the UUID Sim map texture", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void MapTexture(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("get_region_texture", 0, 1, "get_region_texture [sim_name] - prints the UUID Sim map texture", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void MapTexture(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             string par = additionalArgs[0].Replace('_', ' ');
 
@@ -113,8 +113,8 @@ namespace OpenCollarBot
             }
         }
 
-        [CommandGroup("demonitor_sim", 4, 1, "demonitor_sim [string:SimName] - DeMonitors misc data about a sim every 5 seconds", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void DeMonitorSim(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("demonitor_sim", 4, 1, "demonitor_sim [string:SimName] - DeMonitors misc data about a sim every 5 seconds", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void DeMonitorSim(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             string par = additionalArgs[0].Replace('_', ' ');
             if (OCBSession.Instance.MonitoredRegions.Contains(par))
@@ -127,41 +127,41 @@ namespace OpenCollarBot
         }
 
 
-        [CommandGroup("set_login_default", 3, 1, "Sets either the region or vector position as default upon login. Argument is a string [region/location]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void SetLoginDefault(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("set_login_default", 3, 1, "Sets either the region or vector position as default upon login. Argument is a string [region/location]", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void SetLoginDefault(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             OCBotMemory mem = OCBotMemory.Memory;
             if (additionalArgs[0].ToLower() == "region")
-                mem.DefaultRegion = grid.Network.CurrentSim.Name;
+                mem.DefaultRegion = BotSession.Instance.grid.Network.CurrentSim.Name;
             else
-                mem.DefaultLocation = grid.Self.SimPosition;
+                mem.DefaultLocation = BotSession.Instance.grid.Self.SimPosition;
 
             mem.Save();
         }
 
-        [CommandGroup("offer_tp", 0, 0, "Offers you a teleport!", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void OfferTP2User(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("offer_tp", 0, 0, "Offers you a teleport!", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void OfferTP2User(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
-            grid.Self.SendTeleportLure(client, "Here's that Teleport you requested!");
+            BotSession.Instance.grid.Self.SendTeleportLure(client, "Here's that Teleport you requested!");
         }
 
 
-        [CommandGroup("resave", 5, 0, "resave - Zerofills OpenCollarBot.BDF, removes invalid values and then saves fresh file", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void resave(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("resave", 5, 0, "resave - Zerofills OpenCollarBot.BDF, removes invalid values and then saves fresh file", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void resave(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             if (File.Exists("OpenCollarBot.json")) File.Delete("OpenCollarBot.json");
             ocb.Save();
         }
 
-        [CommandGroup("sit", 4, 1, "Sits the bot on a object now and at login [#UUID/unsit]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void PerformSitCommand(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("sit", 4, 1, "Sits the bot on a object now and at login [#UUID/unsit]", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void PerformSitCommand(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             OCBotMemory bmem = OCBotMemory.Memory;
 
             if (additionalArgs[0] == "unsit")
             {
-                grid.Self.Stand();
+                BotSession.Instance.grid.Self.Stand();
                 bmem.sit_cube = UUID.Zero;
                 bmem.Save();
             }
@@ -171,7 +171,7 @@ namespace OpenCollarBot
                 try
                 {
                     obj = UUID.Parse(additionalArgs[0]);
-                    grid.Self.RequestSit(obj, Vector3.Zero);
+                    BotSession.Instance.grid.Self.RequestSit(obj, Vector3.Zero);
                     bmem.sit_cube = obj;
                     bmem.Save();
                 }
@@ -184,8 +184,8 @@ namespace OpenCollarBot
             }
         }
 
-        [CommandGroup("invite", 0, 1, "invite [uuid_user] - Sends a group invite! (Note: This variant is only able to be used from within a group. See !invite for requesting invite anywhere)", MessageHandler.Destinations.DEST_GROUP)]
-        public void InviteToGroupByChat(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("invite", 0, 1, "invite [uuid_user] - Sends a group invite! (Note: This variant is only able to be used from within a group. See !invite for requesting invite anywhere)", Destinations.DEST_GROUP)]
+        public void InviteToGroupByChat(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             if (DateTime.Now < ocb.InviteLastSent)
@@ -204,15 +204,15 @@ namespace OpenCollarBot
             {
                 List<UUID> role = new List<UUID>();
                 role.Add(UUID.Zero);
-                grid.Groups.Invite(groupID, role, sendTo);
+                BotSession.Instance.grid.Groups.Invite(groupID, role, sendTo);
 
                 MHE(source, client, "Sent the invite");
             }
         }
 
 
-        [CommandGroup("!invite", 4, 2, "!invite [uuid_group] [uuid_person] - Offers a group invite to a person", MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void InviteToGroup(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("!invite", 4, 2, "!invite [uuid_group] [uuid_person] - Offers a group invite to a person", Destinations.DEST_GROUP | Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void InviteToGroup(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             OCGroupCaches gc = new OCGroupCaches();
             UUID groupID = UUID.Parse(additionalArgs[0]);
@@ -222,20 +222,20 @@ namespace OpenCollarBot
             if (!File.Exists("GroupCache/" + additionalArgs[0] + ".json"))
             {
                 
-                grid.Groups.RequestGroupRoles(groupID);
+                BotSession.Instance.grid.Groups.RequestGroupRoles(groupID);
             }
             List<UUID> roles = new List<UUID>();
             roles.Add(UUID.Zero);
-            grid.Groups.Invite(groupID, roles, user);
+            BotSession.Instance.grid.Groups.Invite(groupID, roles, user);
 
 
         }
 
-        [CommandGroup("set_group", 4, 1, "set_group [uuid] - Sets the active group title", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void SetActiveGroup(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("set_group", 4, 1, "set_group [uuid] - Sets the active group title", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void SetActiveGroup(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             UUID groupKey = UUID.Parse(additionalArgs[0]);
-            grid.Groups.ActivateGroup(groupKey);
+            BotSession.Instance.grid.Groups.ActivateGroup(groupKey);
 
             OCBotMemory bmem = OCBotMemory.Memory;
             bmem.GroupKey = groupKey;
@@ -244,20 +244,20 @@ namespace OpenCollarBot
 
 
 
-        [CommandGroup("clear_queue", 3, 0, "clear_queue - Full Queue Reset", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP )]
-        public void ClearQueue(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("clear_queue", 3, 0, "clear_queue - Full Queue Reset", Destinations.DEST_AGENT | Destinations.DEST_LOCAL | Destinations.DEST_GROUP )]
+        public void ClearQueue(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
-            MHE(MessageHandler.Destinations.DEST_ACTION, UUID.Zero, "RESET_QUEUE");
+            BotSession.Instance.MSGSVC.QUEUE.Clear();
             MHE(source, client, "Acknowledged! Cleared the queue!");
         }
 
 
 
 
-        [CommandGroup("list_asm", 1, 0, "list_asm - Lists all loaded assembly names", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void list_asm(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("list_asm", 1, 0, "list_asm - Lists all loaded assembly names", Destinations.DEST_LOCAL | Destinations.DEST_GROUP | Destinations.DEST_AGENT)]
+        public void list_asm(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             foreach (Assembly A in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -267,8 +267,8 @@ namespace OpenCollarBot
 
 
 
-        [CommandGroup("output_bf", 3, 1, "output_bf [Fully dump filename to brainfuck] - Dumps a file as brainfuck", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void dumpBF(UUID client, int level, GridClient grid, string[] additionalArgs, MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source, CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("output_bf", 3, 1, "output_bf [Fully dump filename to brainfuck] - Dumps a file as brainfuck", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void dumpBF(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             MHE(source, client, "Dumping " + additionalArgs[0]);
             if (File.Exists(additionalArgs[0]))
@@ -298,10 +298,10 @@ namespace OpenCollarBot
         ManualResetEvent mre = new ManualResetEvent(false);
         List<DirectoryManager.AgentSearchData> peopleSearchResults = new List<DirectoryManager.AgentSearchData>();
 
-        [CommandGroup("search", 0, 1, "search [search_term] - Search this term on SL People Search", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void sl_search(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("search", 0, 1, "search [search_term] - Search this term on SL People Search", Destinations.DEST_LOCAL | Destinations.DEST_GROUP | Destinations.DEST_AGENT)]
+        public void sl_search(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             int queued = 0;
@@ -310,15 +310,15 @@ namespace OpenCollarBot
             {
 
                 peopleSearchResults = new List<DirectoryManager.AgentSearchData>();
-                grid.Directory.StartPeopleSearch(additionalArgs[0], queueRequest);
+                BotSession.Instance.grid.Directory.StartPeopleSearch(additionalArgs[0], queueRequest);
                 mre.Reset();
-                grid.Directory.DirPeopleReply += name_search;
+                BotSession.Instance.grid.Directory.DirPeopleReply += name_search;
                 if (mre.WaitOne(TimeSpan.FromSeconds(30)))
                 {
                     // output the search results
 
                     //MHE(source, client, "Okay! I got a reply from search results! [" + peopleSearchResults.Count.ToString() + "]");
-                    grid.Directory.DirPeopleReply -= name_search;
+                    BotSession.Instance.grid.Directory.DirPeopleReply -= name_search;
 
                     foreach (DirectoryManager.AgentSearchData asd in peopleSearchResults)
                     {
@@ -329,18 +329,18 @@ namespace OpenCollarBot
                 else
                 {
                     MHE(source, client, "Failed to get results in time");
-                    grid.Directory.DirPeopleReply -= name_search;
+                    BotSession.Instance.grid.Directory.DirPeopleReply -= name_search;
                     return;
                 }
                 queueRequest++;
 
                 if (queued > 300)
                 {
-                    MHE(MessageHandler.Destinations.DEST_ACTION, UUID.Zero, "RESET_QUEUE");
+                    BotSession.Instance.MSGSVC.QUEUE.Clear();
                     peopleSearchResults = new List<DirectoryManager.AgentSearchData>();
                     MHE(source, client, "Search has been canceled. There were more than 100 results!");
 
-                    grid.Directory.DirPeopleReply -= name_search;
+                    BotSession.Instance.grid.Directory.DirPeopleReply -= name_search;
                     return;
                 }
             }
@@ -349,24 +349,24 @@ namespace OpenCollarBot
         }
 
 
-        [CommandGroup("search_exact", 0, 2, "search [first] [last] - Find specific avatar", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void sl_search_exact(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("search_exact", 0, 2, "search [first] [last] - Find specific avatar", Destinations.DEST_LOCAL | Destinations.DEST_GROUP | Destinations.DEST_AGENT)]
+        public void sl_search_exact(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
-            grid.Directory.StartPeopleSearch(additionalArgs[0] + " " + additionalArgs[1], 0);
+            BotSession.Instance.grid.Directory.StartPeopleSearch(additionalArgs[0] + " " + additionalArgs[1], 0);
 
 
             mre.Reset();
-            grid.Directory.DirPeopleReply += name_search;
+            BotSession.Instance.grid.Directory.DirPeopleReply += name_search;
             if (mre.WaitOne(TimeSpan.FromSeconds(30)))
             {
                 // output the search results
 
                 MHE(source, client, "Okay! I got a reply from search results!");
-                grid.Directory.DirPeopleReply -= name_search;
+                BotSession.Instance.grid.Directory.DirPeopleReply -= name_search;
 
                 foreach (DirectoryManager.AgentSearchData asd in peopleSearchResults)
                 {
@@ -378,7 +378,7 @@ namespace OpenCollarBot
             else
             {
                 MHE(source, client, "Failed to get results in time");
-                grid.Directory.DirPeopleReply -= name_search;
+                BotSession.Instance.grid.Directory.DirPeopleReply -= name_search;
             }
 
 
@@ -396,25 +396,25 @@ namespace OpenCollarBot
         ManualResetEvent k2n = new ManualResetEvent(false);
         Dictionary<UUID, string> DiscoveredNames = new Dictionary<UUID, string>();
 
-        [CommandGroup("key2name", 0, 1, "key2name [uuid] - Transforms a UUID to username", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void sl_key2name(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("key2name", 0, 1, "key2name [uuid] - Transforms a UUID to username", Destinations.DEST_LOCAL | Destinations.DEST_GROUP | Destinations.DEST_AGENT)]
+        public void sl_key2name(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             k2n.Reset();
-            grid.Avatars.UUIDNameReply += key2name_reply;
-            grid.Avatars.RequestAvatarName(UUID.Parse(additionalArgs[0]));
+            BotSession.Instance.grid.Avatars.UUIDNameReply += key2name_reply;
+            BotSession.Instance.grid.Avatars.RequestAvatarName(UUID.Parse(additionalArgs[0]));
 
             if (k2n.WaitOne(TimeSpan.FromSeconds(30)))
             {
-                grid.Avatars.UUIDNameReply -= key2name_reply;
+                BotSession.Instance.grid.Avatars.UUIDNameReply -= key2name_reply;
                 MHE(source, client, "UUID [secondlife:///app/agent/" + additionalArgs[0] + "/about " + additionalArgs[0] + "] is " + DiscoveredNames[UUID.Parse(additionalArgs[0])]);
             }
             else
             {
                 MHE(source, client, "Failed to lookup that user! Do they exist?");
-                grid.Avatars.UUIDNameReply -= key2name_reply;
+                BotSession.Instance.grid.Avatars.UUIDNameReply -= key2name_reply;
             }
 
             DiscoveredNames = new Dictionary<UUID, string>();
@@ -429,10 +429,10 @@ namespace OpenCollarBot
 
 
 
-        [CommandGroup("pwdgen", 0, 5, "pwdgen [Length] [y/n:SpecialChars] [y/n:Numbers] [y/n:MixCase] [NUMBER:randomizerSeed] - Generates a password", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void PWDGen(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("pwdgen", 0, 5, "pwdgen [Length] [y/n:SpecialChars] [y/n:Numbers] [y/n:MixCase] [NUMBER:randomizerSeed] - Generates a password", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void PWDGen(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             MHE(source, agentKey, "Processing request");
             string UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -520,10 +520,10 @@ namespace OpenCollarBot
         }
 
 
-        [CommandGroup("set_staffgroup", 5, 1, "set_staffgroup [uuid] - Sets the staff group ID for where to send the kick notices", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void set_staffgroup(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("set_staffgroup", 5, 1, "set_staffgroup [uuid] - Sets the staff group ID for where to send the kick notices", Destinations.DEST_LOCAL | Destinations.DEST_GROUP | Destinations.DEST_AGENT)]
+        public void set_staffgroup(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             ocb.StaffGroup = UUID.Parse(additionalArgs[0]);
@@ -532,10 +532,10 @@ namespace OpenCollarBot
         }
 
 
-        [CommandGroup("auto_buildnotice", 5, 3, "auto_buildnotice [kicked_username_b64:string] [rawkickmsgb64:string] [kickedByb64:string] - This command is reserved for automated scripts. Builds a notice and sends it to staff group if staffgroup is set", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_GROUP | MessageHandler.Destinations.DEST_AGENT)]
-        public void auto_buildnotice(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("auto_buildnotice", 5, 3, "auto_buildnotice [kicked_username_b64:string] [rawkickmsgb64:string] [kickedByb64:string] - This command is reserved for automated scripts. Builds a notice and sends it to staff group if staffgroup is set", Destinations.DEST_LOCAL | Destinations.DEST_GROUP | Destinations.DEST_AGENT)]
+        public void auto_buildnotice(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             // Check staff group is set
             OCBotMemory ocb = OCBotMemory.Memory;

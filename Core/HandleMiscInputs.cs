@@ -13,7 +13,7 @@ namespace OpenCollarBot.Core
     public class HandleMiscInputs : nCMD
     {
         [NotCommand()]
-        public void handle(string text, UUID User, string agentName, MessageHandler.Destinations src, UUID originator)
+        public void handle(string text, UUID User, string agentName, Destinations src, UUID originator)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             //BotSession.Instance.MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, $"Got data \n\n[HandleMiscInputs.cs]:handle(\"{text}\", {User.ToString()}, \"{agentName}\", {src.ToString()}, {originator.ToString()})");
@@ -21,28 +21,28 @@ namespace OpenCollarBot.Core
             {
                 // Send report response to GitCommands
                 GitCommands gc = new GitCommands();
-                gc.BugResponse(originator, User, ocb.ActiveReportSessions[User].ReportStage, text, src, BotSession.Instance.MHE, agentName);
+                gc.BugResponse(originator, User, ocb.ActiveReportSessions[User].ReportStage, text, src, agentName);
                 return;
             }
 
             if (ocb.ActiveFeatureSessions.ContainsKey(User) && ocb.ActiveFeatureSessions.Count > 0)
             {
                 GitCommands gc = new GitCommands();
-                gc.FeatureResponse(originator, User, ocb.ActiveFeatureSessions[User].ReportStage, text, src, BotSession.Instance.MHE, agentName);
+                gc.FeatureResponse(originator, User, ocb.ActiveFeatureSessions[User].ReportStage, text, src, agentName);
                 return;
             }
 
             if (ocb.ActiveCommentSessions.ContainsKey(User) && ocb.ActiveCommentSessions.Count > 0)
             {
                 GitCommands gc = new GitCommands();
-                gc.comment(originator, User, ocb.ActiveCommentSessions[User].ReportStage, text, src, BotSession.Instance.MHE, agentName);
+                gc.comment(originator, User, ocb.ActiveCommentSessions[User].ReportStage, text, src, agentName);
                 return;
             }
 
             if (ocb.NoticeSessions.ContainsKey(User) && ocb.NoticeSessions.Count > 0)
             {
                 GroupSystem gs = new GroupSystem();
-                gs.update_notice_sess(originator, User, text, src, BotSession.Instance.MHE, agentName);
+                gs.update_notice_sess(originator, User, text, src, agentName);
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace OpenCollarBot.Core
                     if (ML.PrepFrom == User && ML.PrepState == 1)
                     {
                         MailingLists.MailingLists cML = new MailingLists.MailingLists();
-                        cML.HandleMailListData(User, originator, src, BotSession.Instance.MHE, sML, text);
+                        cML.HandleMailListData(User, originator, src, sML, text);
                         return;
                     }
                 }

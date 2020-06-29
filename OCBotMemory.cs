@@ -176,7 +176,7 @@ namespace OpenCollarBot
         public Dictionary<UUID, RateData> RateLimiter { get; set; }
 
 
-        public bool SubmitNewRateUsage(UUID ID, MessageHandler.MessageHandleEvent MHE)
+        public bool SubmitNewRateUsage(UUID ID)
         {
             if (RateLimiter.ContainsKey(ID))
             {
@@ -200,7 +200,7 @@ namespace OpenCollarBot
                     if (RD.Reset_At < DateTime.Now)
                     {
                         RateLimiter.Remove(ID);
-                        return SubmitNewRateUsage(ID, MHE);
+                        return SubmitNewRateUsage(ID);
                     }
                     else
                     {

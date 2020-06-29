@@ -16,7 +16,7 @@ using OpenMetaverse;
 
 namespace OpenCollarBot.ScriptImporter
 {
-    class ScriptManager : IProgram
+    class ScriptManager : BaseCommands, IProgram
     {
         public string ProgramName
         {
@@ -38,11 +38,11 @@ namespace OpenCollarBot.ScriptImporter
             }
         }
 
-        public string getTick()
+        public void getTick()
         {
             // Check Script Queue
             QueueRunner.run();
-            return "";
+            return;
         }
 
         public void LoadConfiguration()
@@ -60,7 +60,7 @@ namespace OpenCollarBot.ScriptImporter
 
         }
 
-        public void run(GridClient client, MessageHandler MH, CommandRegistry registry)
+        public void run()
         {
             // Start Plugin
         }
@@ -91,7 +91,7 @@ namespace OpenCollarBot.ScriptImporter
 
                 if(hwresp.StatusCode == HttpStatusCode.NotFound)
                 {
-                    BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, Requester, "ALERT: BDF Entry: " + kvp.Value.ScriptName+kvp.Value.FileExt + "; Does not exist on the server!");
+                    MH(Destinations.DEST_AGENT, Requester, "ALERT: BDF Entry: " + kvp.Value.ScriptName+kvp.Value.FileExt + "; Does not exist on the server!");
                     continue;
                 } else if(hwresp.StatusCode == HttpStatusCode.OK)
                 {
@@ -116,10 +116,10 @@ namespace OpenCollarBot.ScriptImporter
 
 
 
-        [CommandGroup("reply_prompt", 0, 2, "reply_prompt [int:PromptID] [int:ButtonNumber]", MessageHandler.Destinations.DEST_LOCAL | MessageHandler.Destinations.DEST_AGENT)]
-        public void dialog_reply(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("reply_prompt", 0, 2, "reply_prompt [int:PromptID] [int:ButtonNumber]", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void dialog_reply(UUID client, int level,  string[] additionalArgs,
+                                 Destinations source,
+                                UUID agentKey, string agentName)
         {
             MHE(source, client, "Responding..");
 

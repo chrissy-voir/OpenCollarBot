@@ -1,6 +1,6 @@
 ﻿/*
 
-Copyright © 2019 Tara Piccari (Aria; Tashia Redrose)
+Copyright © 2020 Tara Piccari (Aria; Tashia Redrose)
 Licensed under the GPLv2
 
 */
@@ -22,14 +22,13 @@ using Logger = Bot.Logger;
 
 namespace OpenCollarBot
 {
-    public class Program : IProgram
+    public class Program : BaseCommands, IProgram
     {
         public GridClient grid;
         public CommandManager CM = null;
         public OCBotMemory BMem = null;
         public Logger Log = BotSession.Instance.Logger;
         public CommandRegistry registry;
-        public MessageHandler.MessageHandleEvent MHE;
 
         public string ProgramName
         {
@@ -40,9 +39,9 @@ namespace OpenCollarBot
 
         private DateTime LastScheduleCheck;
 
-        public string getTick()
+        public void getTick()
         {
-            GroupSystem.PerformCheck(grid, LastScheduleCheck, MHE);
+            GroupSystem.PerformCheck(LastScheduleCheck);
 
             if (DateTime.Now > LastScheduleCheck) LastScheduleCheck = DateTime.Now + TimeSpan.FromMinutes(5);
             
@@ -142,7 +141,7 @@ namespace OpenCollarBot
                 }
             }
 
-            return CM.newReply;
+            return;
         }
 
         public void LoadConfiguration()
@@ -154,15 +153,15 @@ namespace OpenCollarBot
         public void passArguments(string data)
         {
             
-            CM.RunChatCommand(data, grid, MHE, registry);
+            CM.RunChatCommand(data);
         }
 
-        public void run(GridClient client, MessageHandler MH, CommandRegistry registry)
+        public void run()
         {
             if (Directory.Exists("GroupCache")) Directory.Delete("GroupCache", true); // Clear cache on restart
-            this.registry = registry;
-            this.MHE = MH.callbacks;
-            grid = client;
+            registry = CommandRegistry.Instance;
+            
+            grid = BotSession.Instance.grid;
             grid.Inventory.InventoryObjectOffered += On_NewInventoryOffer;
             grid.Groups.GroupRoleDataReply += CacheGroupRoles;
             grid.Groups.GroupMembersReply += Groups_GroupMembersReply;
@@ -172,14 +171,14 @@ namespace OpenCollarBot
             BMem = OCBotMemory.Memory;
 
             if (BMem.status != "")
-                MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, BMem.status);
+                MHE(Destinations.DEST_LOCAL, UUID.Zero, BMem.status);
 
-            CM = new CommandManager(BotSession.Instance.Logger, client, MH.callbacks);
+            CM = new CommandManager();
 
             ReloadGroupsCache();
-            if (client.Network.CurrentSim.Name != BMem.DefaultRegion && BMem.DefaultRegion != "")
+            if (grid.Network.CurrentSim.Name != BMem.DefaultRegion && BMem.DefaultRegion != "")
             {
-                if (BMem.DefaultLocation != Vector3.Zero) client.Self.Teleport(BMem.DefaultRegion, BMem.DefaultLocation);
+                if (BMem.DefaultLocation != Vector3.Zero) grid.Self.Teleport(BMem.DefaultRegion, BMem.DefaultLocation);
             }
 
             if (BMem.sit_cube != UUID.Zero)
@@ -192,7 +191,7 @@ namespace OpenCollarBot
 
             BMem.iHaveBeenTeleported = false;
             BMem.Save(); // disable on relog
-            client.Self.ScriptDialog += onScriptDialog;
+            grid.Self.ScriptDialog += onScriptDialog;
         }
 
         private void Groups_GroupMembersReply(object sender, GroupMembersReplyEventArgs e)
@@ -245,23 +244,23 @@ namespace OpenCollarBot
                 
             }
 
-            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, e.OwnerID, $"Hi! I got this script dialog: \n \nDialogID: {Block2}\nChannel: {SDS.ReplyChannel}\nPrompt: {SDS.DialogPrompt}\nButtons: {BTNStr}\n \n[To respond to this dialog use the !reply_prompt command]");
-            BotSession.Instance.MHE(MessageHandler.Destinations.DEST_AGENT, e.OwnerID, $"Note: When responding to the dialog, please use the button IDs infront of the labels, not the actual label!\nFor example: !reply_prompt {Block2} 0");
+            MHE(Destinations.DEST_AGENT, e.OwnerID, $"Hi! I got this script dialog: \n \nDialogID: {Block2}\nChannel: {SDS.ReplyChannel}\nPrompt: {SDS.DialogPrompt}\nButtons: {BTNStr}\n \n[To respond to this dialog use the !reply_prompt command]");
+            MHE(Destinations.DEST_AGENT, e.OwnerID, $"Note: When responding to the dialog, please use the button IDs infront of the labels, not the actual label!\nFor example: !reply_prompt {Block2} 0");
             
         }
 
         private void On_NewInventoryOffer(object sender, InventoryObjectOfferedEventArgs e)
         {
-            MHE(MessageHandler.Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Checking notice creation sessions..");
+            MHE(Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Checking notice creation sessions..");
             OCBotMemory ocMem = OCBotMemory.Memory;
             if (ocMem.NoticeSessions.ContainsKey(e.Offer.FromAgentID))
             {
-                MHE(MessageHandler.Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Checking..");
+                MHE(Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Checking..");
                 OCBotMemory.NoticeCreationSessions nCS = ocMem.NoticeSessions[e.Offer.FromAgentID];
                 if (nCS.State == 5)
                 {
 
-                    MHE(MessageHandler.Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Stand by.. Accepting inventory and moving it into place");
+                    MHE(Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Stand by.. Accepting inventory and moving it into place");
                     AssetType dataType = e.AssetType;
                     UUID AssetID = e.ObjectID;
                     UUID DestinationFolder = grid.Inventory.FindFolderForType(dataType);
@@ -273,12 +272,12 @@ namespace OpenCollarBot
                     nCS.State++;
                     ocMem.NoticeSessions[e.Offer.FromAgentID] = nCS;
                     ocMem.Save();
-                    MHE(MessageHandler.Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Here's the details of the built notice, please very it is correct\n \nNotice Summary: " + nCS.TemporaryNotice.NoticeSummary + "\nNotice Description: " + nCS.TemporaryNotice.NoticeDescription + "\nNotice has attachment: " + nCS.TemporaryNotice.HasAttachment.ToString() + "\nNotice Attachment ID: " + nCS.TemporaryNotice.NoticeAttachment.ToString() + "\nRepeats: " + nCS.TemporaryNotice.Repeats.ToString() + "\n \n[To confirm this, say 'confirm']");
+                    MHE(Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Here's the details of the built notice, please very it is correct\n \nNotice Summary: " + nCS.TemporaryNotice.NoticeSummary + "\nNotice Description: " + nCS.TemporaryNotice.NoticeDescription + "\nNotice has attachment: " + nCS.TemporaryNotice.HasAttachment.ToString() + "\nNotice Attachment ID: " + nCS.TemporaryNotice.NoticeAttachment.ToString() + "\nRepeats: " + nCS.TemporaryNotice.Repeats.ToString() + "\n \n[To confirm this, say 'confirm']");
                 }
             }
             else
             {
-                MHE(MessageHandler.Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Notice session does not exist!");
+                MHE(Destinations.DEST_LOCAL, e.Offer.FromAgentID, "Notice session does not exist!");
                 e.Accept = false;
             }
 
@@ -333,7 +332,7 @@ namespace OpenCollarBot
                     if (RoleReply.WaitOne(TimeSpan.FromSeconds(30), false)) { Retry = false; }
                     else
                     {
-                        MHE(MessageHandler.Destinations.DEST_LOCAL, UUID.Zero, "There appears to have been a failure requesting the group roles for secondlife:///app/group/" + DoCache.Value.ID.ToString() + "/about - Trying again");
+                        MHE(Destinations.DEST_LOCAL, UUID.Zero, "There appears to have been a failure requesting the group roles for secondlife:///app/group/" + DoCache.Value.ID.ToString() + "/about - Trying again");
 
                     }
                 }

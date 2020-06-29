@@ -20,12 +20,12 @@ using System.Net;
 
 namespace OpenCollarBot.MailingLists
 {
-    public class MailingLists
+    public class MailingLists : BaseCommands
     {
-        [CommandGroup("mkmaillist", 4, 2, "mkmaillist [list_name] [allow_optOut:(y/n)]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void MakeMailingList(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("mkmaillist", 4, 2, "mkmaillist [list_name] [allow_optOut:(y/n)]", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void MakeMailingList(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             // Create the new mailing list
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -51,10 +51,10 @@ namespace OpenCollarBot.MailingLists
 
         }
 
-        [CommandGroup("maillist_add", 4, 2, "maillist_add [list_name] [UUID]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void AddListMember(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_add", 4, 2, "maillist_add [list_name] [UUID]", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void AddListMember(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             // Create the new mailing list
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -97,10 +97,10 @@ namespace OpenCollarBot.MailingLists
         }
 
 
-        [CommandGroup("maillist_rem", 4, 2, "maillist_rem [list_name] [UUID]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void RemListMember(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_rem", 4, 2, "maillist_rem [list_name] [UUID]", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void RemListMember(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             // Create the new mailing list
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -130,10 +130,10 @@ namespace OpenCollarBot.MailingLists
 
 
 
-        [CommandGroup("maillist_replace", 4, 2, "maillist_replace [list_name] [URL] - Replaces the members list with the CSV at [URL]", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ReplaceMailListMembers(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_replace", 4, 2, "maillist_replace [list_name] [URL] - Replaces the members list with the CSV at [URL]", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void ReplaceMailListMembers(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             // Create the new mailing list
             OCBotMemory ocb = OCBotMemory.Memory;
@@ -180,10 +180,10 @@ namespace OpenCollarBot.MailingLists
             else return "false";
         }
 
-        [CommandGroup("maillist", 4, 1, "maillist [list_name] - Lists all data about a mailing list (DANGER: Can be long.)", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void GetMailListMembers(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist", 4, 1, "maillist [list_name] - Lists all data about a mailing list (DANGER: Can be long.)", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void GetMailListMembers(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -202,10 +202,10 @@ namespace OpenCollarBot.MailingLists
         }
 
 
-        [CommandGroup("lsmaillist", 4, 0, "lsmaillist - Lists all mailinglist names", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void GetMailLists(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("lsmaillist", 4, 0, "lsmaillist - Lists all mailinglist names", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void GetMailLists(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -218,10 +218,10 @@ namespace OpenCollarBot.MailingLists
         }
 
 
-        [CommandGroup("rmmaillist", 4, 1, "rmmaillist [list_name] - Deletes the mailing list if authorized", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void RMMailLists(UUID client, int level, GridClient grid, string[] additionalArgs,
-                                MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                                CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("rmmaillist", 4, 1, "rmmaillist [list_name] - Deletes the mailing list if authorized", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void RMMailLists(UUID client, int level, string[] additionalArgs,
+                                Destinations source,
+                                UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -237,10 +237,10 @@ namespace OpenCollarBot.MailingLists
         }
 
 
-        [CommandGroup("maillist_prepare", 4, 1, "maillist_prepare [list_name] - Begins preparing for a message to be sent", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void StartNewDispatchedMessage(UUID client, int level, GridClient grid, string[] additionalArgs,
-                        MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                        CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_prepare", 4, 1, "maillist_prepare [list_name] - Begins preparing for a message to be sent", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void StartNewDispatchedMessage(UUID client, int level, string[] additionalArgs,
+                        Destinations source,
+                        UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -255,7 +255,7 @@ namespace OpenCollarBot.MailingLists
             MHE(source, client, "Okay you can type out your message now. \n \n[To indicate completion type '@', and for a new line type '#', and to cancel: 'cancel']");
         }
 
-        public void HandleMailListData(UUID agent, UUID from, MessageHandler.Destinations source, MessageHandler.MessageHandleEvent MHE, string MailingListName, string reply)
+        public void HandleMailListData(UUID agent, UUID from, Destinations source, string MailingListName, string reply)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
             OCBotMemory.MailList ML = ocb.MailingLists[MailingListName];
@@ -286,7 +286,7 @@ namespace OpenCollarBot.MailingLists
                 MHE(source, from, "Okay! Dispatching a example message to you. If it looks right then use the -maillist_send- command. View the help data for more info. If it does not look right.. Just start the process over, it'll erase the existing data");
                 ML.PrepMsg = "_\n \n[Mailing List Notification]\n[List: " + ML.ListName + "]\n*You are receiving this message because you are a member of the mailing list\n \n" + ML.PrepMsg;
                 ML.PrepState = 2;
-                MHE(MessageHandler.Destinations.DEST_AGENT, agent, ML.PrepMsg);
+                MHE(Destinations.DEST_AGENT, agent, ML.PrepMsg);
                 ocb.MailingLists[MailingListName] = ML;
                 ocb.Save();
                 return;
@@ -302,10 +302,10 @@ namespace OpenCollarBot.MailingLists
         }
 
 
-        [CommandGroup("maillist_send", 4, 1, "maillist_send [list_name] - Sends Prepared data", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void Dispatch(UUID client, int level, GridClient grid, string[] additionalArgs,
-                        MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                        CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_send", 4, 1, "maillist_send [list_name] - Sends Prepared data", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void Dispatch(UUID client, int level, string[] additionalArgs,
+                        Destinations source,
+                        UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -335,7 +335,7 @@ namespace OpenCollarBot.MailingLists
 
                         }
                         if (CanSend)
-                            MHE(MessageHandler.Destinations.DEST_AGENT, Member.MemberID, ML.PrepMsg);
+                            MHE(Destinations.DEST_AGENT, Member.MemberID, ML.PrepMsg);
                     }
                     else
                     {
@@ -347,7 +347,7 @@ namespace OpenCollarBot.MailingLists
                         if (CanSend)
                         {
 
-                            MHE(MessageHandler.Destinations.DEST_AGENT, Member.MemberID, ML.PrepMsg + "\n \n[I see this is the first time you are receiving a message on this mailing list]\n[If you want to opt out from this mailing list, you can send the command: maillist_opt [list_name]]\n[If you want to opt out from all mailing lists you can send: maillist_off/maillist_on]");
+                            MHE(Destinations.DEST_AGENT, Member.MemberID, ML.PrepMsg + "\n \n[I see this is the first time you are receiving a message on this mailing list]\n[If you want to opt out from this mailing list, you can send the command: maillist_opt [list_name]]\n[If you want to opt out from all mailing lists you can send: maillist_off/maillist_on]");
 
                             Console.WriteLine("Begin replace");
                             Member.setInformed();
@@ -362,7 +362,7 @@ namespace OpenCollarBot.MailingLists
             Console.WriteLine("Foreach complete");
 
 
-            MHE(MessageHandler.Destinations.DEST_AGENT, ML.MailListOwner, ML.PrepMsg);
+            MHE(Destinations.DEST_AGENT, ML.MailListOwner, ML.PrepMsg);
 
             ML.PrepFrom = UUID.Zero;
             ML.PrepMsg = "";
@@ -375,10 +375,10 @@ namespace OpenCollarBot.MailingLists
 
 
 
-        [CommandGroup("maillist_opt", 0, 1, "maillist_opt [list_name] - Toggles the OptOut Status if list allows for it", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ToggleMaillist(UUID client, int level, GridClient grid, string[] additionalArgs,
-                        MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                        CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_opt", 0, 1, "maillist_opt [list_name] - Toggles the OptOut Status if list allows for it", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void ToggleMaillist(UUID client, int level, string[] additionalArgs,
+                        Destinations source,
+                        UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -407,10 +407,10 @@ namespace OpenCollarBot.MailingLists
 
         }
 
-        [CommandGroup("maillist_allowopt", 4, 2, "maillist_allowopt [list_name] [allowOpt:y/n] - Toggles the OptOut Status for the entire list", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ToggleMaillistOpt(UUID client, int level, GridClient grid, string[] additionalArgs,
-                        MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                        CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_allowopt", 4, 2, "maillist_allowopt [list_name] [allowOpt:y/n] - Toggles the OptOut Status for the entire list", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void ToggleMaillistOpt(UUID client, int level, string[] additionalArgs,
+                        Destinations source,
+                        UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -439,10 +439,10 @@ namespace OpenCollarBot.MailingLists
 
 
 
-        [CommandGroup("maillist_off", 0, 0, "maillist_off - Turns all mailing lists off for you", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ToggleMaillistOff(UUID client, int level, GridClient grid, string[] additionalArgs,
-                        MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                        CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_off", 0, 0, "maillist_off - Turns all mailing lists off for you", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void ToggleMaillistOff(UUID client, int level, string[] additionalArgs,
+                        Destinations source,
+                        UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
@@ -453,10 +453,10 @@ namespace OpenCollarBot.MailingLists
 
         }
 
-        [CommandGroup("maillist_on", 0, 0, "maillist_on - Turns all mailing lists on for you", MessageHandler.Destinations.DEST_AGENT | MessageHandler.Destinations.DEST_LOCAL)]
-        public void ToggleMaillistOn(UUID client, int level, GridClient grid, string[] additionalArgs,
-                        MessageHandler.MessageHandleEvent MHE, MessageHandler.Destinations source,
-                        CommandRegistry registry, UUID agentKey, string agentName)
+        [CommandGroup("maillist_on", 0, 0, "maillist_on - Turns all mailing lists on for you", Destinations.DEST_AGENT | Destinations.DEST_LOCAL)]
+        public void ToggleMaillistOn(UUID client, int level, string[] additionalArgs,
+                        Destinations source,
+                        UUID agentKey, string agentName)
         {
             OCBotMemory ocb = OCBotMemory.Memory;
 
