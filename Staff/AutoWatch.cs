@@ -119,6 +119,11 @@ namespace OpenCollarBot.Staff
                             if (OCBotMemory.Memory.AntiSpamReply[User].Ignore) return;
                             reply_data = OCBotMemory.Memory.AntiSpamReply[User];
                             has_reply_data = true;
+                        }else
+                        {
+                            reply_data.Ignore = false;
+                            reply_data.InitialReply = DateTime.Now;
+                            
                         }
 
 
@@ -158,6 +163,11 @@ namespace OpenCollarBot.Staff
                             reply_data.TriggerCount = 1;
                             reply_data.InitialReply = DateTime.Now;
                             reply_data.Ignore = false;
+
+                            if (!OCBotMemory.Memory.AntiSpamReply.ContainsKey(User))
+                                OCBotMemory.Memory.AntiSpamReply.Add(User, reply_data);
+                            else
+                                OCBotMemory.Memory.AntiSpamReply[User] = reply_data;
                         }
 
                     }
