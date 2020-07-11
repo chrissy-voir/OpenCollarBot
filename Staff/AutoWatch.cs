@@ -54,8 +54,12 @@ namespace OpenCollarBot.Staff
         public void run()
         {
             // Reset the OCBotMemory Antispam list
-            OCBotMemory.Memory.AntiSpamReply = new Dictionary<UUID, OCBotMemory.ReplyData>();
-            OCBotMemory.Memory.Save();
+            if(OCBotMemory.Memory.AntiSpamReply == null)
+            {
+
+                OCBotMemory.Memory.AntiSpamReply = new Dictionary<UUID, OCBotMemory.ReplyData>();
+                OCBotMemory.Memory.Save();
+            }
         }
 
 

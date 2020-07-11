@@ -30,6 +30,17 @@ namespace OpenCollarBot
         }
 
 
+        [CommandGroup("lm", 0, 0, "open_collar_menu - Opens your OpenCollar menu", Destinations.DEST_LOCAL | Destinations.DEST_AGENT)]
+        public void GetLandmark(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
+        {
+            Vector3 myPosition = BotSession.Instance.grid.Self.SimPosition;
+            string Sim = BotSession.Instance.grid.Network.CurrentSim.Name;
+
+            
+            MHE(source, client, $"Hi! Here's a clickable landmark, when you get here, you can use the viewer to make a landmark at a spot of your choice : http://maps.secondlife.com/secondlife/{Uri.EscapeUriString(Sim)}/{myPosition.X}/{myPosition.Y}/{myPosition.Z}");
+        }
+
+
         [CommandGroup("ignore_dialogs", 5, 1, "ignore_dialogs [uuid] - Ignores script dialogs from uuid", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP)]
         public void ignoreMenu(UUID client, int level, string[] additionalArgs,Destinations source, UUID agentKey, string agentName)
         {
