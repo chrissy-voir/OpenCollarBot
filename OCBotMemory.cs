@@ -93,6 +93,9 @@ namespace OpenCollarBot
 
         public Vector3 DefaultLocation { get; set; }
 
+        public Vector3 LMPosition { get; set; } = Vector3.Zero;
+        public string LMSimName { get; set; } = "";
+
         public UUID sit_cube { get; set; }
 
 

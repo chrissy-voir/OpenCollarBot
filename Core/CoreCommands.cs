@@ -33,13 +33,20 @@ namespace OpenCollarBot
         [CommandGroup("lm", 0, 0, "lm - Gives you a clickable link to the bot's location", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
         public void GetLandmark(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
-            Vector3 myPosition = BotSession.Instance.grid.Self.SimPosition;
-            string Sim = BotSession.Instance.grid.Network.CurrentSim.Name;
+            string Sim = OCBotMemory.Memory.LMSimName;
 
             
-            MHE(source, client, $"Hi! Here's a clickable landmark, when you get here, you can use the viewer to make a landmark at a spot of your choice : http://maps.secondlife.com/secondlife/{Uri.EscapeUriString(Sim)}/{myPosition.X}/{myPosition.Y}/{myPosition.Z}");
+            MHE(source, client, $"Hi! Here's a clickable landmark, when you get here, you can use the viewer to make a landmark at a spot of your choice : http://maps.secondlife.com/secondlife/{Uri.EscapeUriString(Sim)}/{OCBotMemory.Memory.LMPosition.X}/{OCBotMemory.Memory.LMPosition.Y}/{OCBotMemory.Memory.LMPosition.Z}");
         }
 
+        [CommandGroup("set_lm_pos", 5, 3, "set_lm_pos [x] [y] [z] - Sets the in-memory landmark to current sim at the specified position", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
+        public void SetLandmark(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
+        {
+            MHE(source, client, $"Setting in-memory landmark...");
+            OCBotMemory.Memory.LMSimName = BotSession.Instance.grid.Network.CurrentSim.Name;
+            OCBotMemory.Memory.LMPosition = new Vector3(float.Parse(additionalArgs[0]), float.Parse(additionalArgs[1]), float.Parse(additionalArgs[2]));
+            OCBotMemory.Memory.Save();
+        }
 
         [CommandGroup("ignore_dialogs", 5, 1, "ignore_dialogs [uuid] - Ignores script dialogs from uuid", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP)]
         public void ignoreMenu(UUID client, int level, string[] additionalArgs,Destinations source, UUID agentKey, string agentName)
