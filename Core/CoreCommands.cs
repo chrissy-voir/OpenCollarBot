@@ -30,7 +30,7 @@ namespace OpenCollarBot
         }
 
 
-        [CommandGroup("lm", 0, 0, "open_collar_menu - Opens your OpenCollar menu", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
+        [CommandGroup("lm", 0, 0, "lm - Gives you a clickable link to the bot's location", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
         public void GetLandmark(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
         {
             Vector3 myPosition = BotSession.Instance.grid.Self.SimPosition;
