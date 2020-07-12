@@ -46,5 +46,7 @@ namespace OpenCollarBot
         public List<UUID> RemoveReplyHandle = new List<UUID>();
         internal DateTime NextTeleportAttempt;
         internal bool RestartTriggered;
+
+        internal DateTime LastReplyPostedAt { get; set; } = DateTime.MinValue;
     }
 }
