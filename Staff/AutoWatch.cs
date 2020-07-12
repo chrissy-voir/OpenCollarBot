@@ -96,7 +96,7 @@ namespace OpenCollarBot.Staff
                 }
             }
 
-            if(OCBSession.Instance.LastReplyPostedAt.AddMinutes(OCBotMemory.Memory.TimeBetweenReplies) < DateTime.Now)
+            if(OCBSession.Instance.LastReplyPostedAt.AddMinutes(OCBotMemory.Memory.TimeBetweenReplies) > DateTime.Now)
             {
                 return; // Do nothing for the rest of this code
             }
@@ -137,6 +137,8 @@ namespace OpenCollarBot.Staff
 
                         if (!reply_data.Ignore)
                         {
+                            OCBSession.Instance.LastReplyPostedAt = DateTime.Now;
+
                             MHE(src, originator, KVP.Value.Reply);
                             if (!has_reply_data)
                             {
