@@ -48,5 +48,7 @@ namespace OpenCollarBot
         internal bool RestartTriggered;
 
         internal DateTime LastReplyPostedAt { get; set; } = DateTime.MinValue;
+
+        public List<UUID> CookieList { get; set; } = new List<UUID>();
     }
 }

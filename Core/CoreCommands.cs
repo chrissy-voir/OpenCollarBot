@@ -16,6 +16,7 @@ using Bot.CommandSystem;
 using System.IO;
 using System.Reflection;
 using System.Net;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace OpenCollarBot
 {
@@ -29,6 +30,37 @@ namespace OpenCollarBot
             BotSession.Instance.grid.Self.Chat(agentName.Substring(0, 2) + "menu", 1, ChatType.Normal);
         }
 
+        [CommandGroup("manual", 0, 0, "docs - Posts the OpenCollar quick guide link", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
+        [CommandGroup("site", 0, 0, "docs - Posts the OpenCollar quick guide link", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
+        [CommandGroup("web", 0, 0, "docs - Posts the OpenCollar quick guide link", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
+        [CommandGroup("doc", 0, 0, "docs - Posts the OpenCollar quick guide link", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
+        [CommandGroup("docs", 0, 0, "docs - Posts the OpenCollar quick guide link", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
+        public void GetOCDocumentation(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
+        {
+            MHE(source, client, "You can find the OpenCollar Documentation on this website: https://opencollar.cc/docs/Quick-User-Guide");
+            MHE(source, client, "The link posted is to the quick guide, you can find other useful docs on that same website!");
+        }
+
+        [CommandGroup("cookie", 0, 0, "cookie - Try to get a cookie", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
+        public void GetACookie(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
+        {
+            if (OCBSession.Instance.CookieList.Contains(agentKey))
+            {
+                MHE(source, client, "You already got a cookie today don't ask again!");
+                return;
+            }
+            Random rnd = new Random();
+            int iRnd = rnd.Next(1, 20);
+            if(iRnd < 10)
+            {
+                MHE(source, client, "Sorry. All out of cookies!");
+            }else
+            {
+                MHE(source, client, "/me gives you 1 chocolate chip cookie");
+                OCBSession.Instance.CookieList.Add(agentKey);
+                
+            }
+        }
 
         [CommandGroup("lm", 0, 0, "lm - Gives you a clickable link to the bot's location", Destinations.DEST_LOCAL | Destinations.DEST_AGENT | Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
         public void GetLandmark(UUID client, int level, string[] additionalArgs, Destinations source, UUID agentKey, string agentName)
