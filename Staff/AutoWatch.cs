@@ -133,7 +133,6 @@ namespace OpenCollarBot.Staff
 
                         if (!reply_data.Ignore)
                         {
-                            OCBSession.Instance.LastReplyPostedAt = DateTime.Now;
 
                             MHE(src, originator, KVP.Value.Reply);
                             if (!has_reply_data)

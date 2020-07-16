@@ -337,7 +337,10 @@ namespace OpenCollarBot
 
             OCBotMemory ocb = OCBotMemory.Memory;
 
-
+            if (Directory.Exists("RequestLogs")) Directory.CreateDirectory("RequestLogs");
+            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            File.WriteAllText("RequestLogs/" + unixTimestamp+"_Event.txt", GHEvent);
+            File.WriteAllText("RequestLogs/" + unixTimestamp + "_Resp.txt", Response);
 
             try
             {
