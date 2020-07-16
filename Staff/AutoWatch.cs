@@ -96,10 +96,6 @@ namespace OpenCollarBot.Staff
                 }
             }
 
-            if(OCBSession.Instance.LastReplyPostedAt.AddMinutes(OCBotMemory.Memory.TimeBetweenReplies) > DateTime.Now)
-            {
-                return; // Do nothing for the rest of this code
-            }
 
             foreach(KeyValuePair<string,ReplacePattern> KVP in OCBotMemory.Memory.AutoReplyWatchPatterns)
             {

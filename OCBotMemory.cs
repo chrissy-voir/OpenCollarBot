@@ -300,7 +300,6 @@ namespace OpenCollarBot
         public string status = "";
 
         public UUID UserNameSearchSession { get; set; }
-        public double TimeBetweenReplies { get; set; } = 10.0;
 
         [NonSerialized()]
         public bool SingletonInitialized = false;
