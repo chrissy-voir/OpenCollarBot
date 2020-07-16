@@ -66,6 +66,7 @@ namespace OpenCollarBot.Staff
         [NotCommand(SourceType = Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
         public void RunNonCommand(string text, UUID User, string agentName, Destinations src, UUID originator)
         {
+            Console.WriteLine(agentName + ": " + text);
             // Checks the chat data against the watchdog
 
             //NameDB DB = NCConf.Instance.GetEntry(agentName);
