@@ -54,19 +54,15 @@ namespace OpenCollarBot.Staff
         public void run()
         {
             // Reset the OCBotMemory Antispam list
-            if(OCBotMemory.Memory.AntiSpamReply == null)
-            {
 
-                OCBotMemory.Memory.AntiSpamReply = new Dictionary<UUID, OCBotMemory.ReplyData>();
-                OCBotMemory.Memory.Save();
-            }
+            OCBotMemory.Memory.AntiSpamReply = new Dictionary<UUID, OCBotMemory.ReplyData>();
+            OCBotMemory.Memory.Save();
         }
 
 
         [NotCommand(SourceType = Destinations.DEST_GROUP | Destinations.DEST_DISCORD)]
         public void RunNonCommand(string text, UUID User, string agentName, Destinations src, UUID originator)
         {
-            Console.WriteLine(agentName + ": " + text);
             // Checks the chat data against the watchdog
 
             //NameDB DB = NCConf.Instance.GetEntry(agentName);
@@ -96,6 +92,7 @@ namespace OpenCollarBot.Staff
                     }
                 }
             }
+
 
 
             foreach(KeyValuePair<string,ReplacePattern> KVP in OCBotMemory.Memory.AutoReplyWatchPatterns)
