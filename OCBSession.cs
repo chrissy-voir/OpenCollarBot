@@ -47,7 +47,6 @@ namespace OpenCollarBot
         internal DateTime NextTeleportAttempt;
         internal bool RestartTriggered;
 
-        public DateTime LastReplyPosted { get; set; } = DateTime.MinValue;
 
         public List<UUID> CookieList { get; set; } = new List<UUID>();
     }
