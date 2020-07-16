@@ -301,6 +301,8 @@ namespace OpenCollarBot
 
         public UUID UserNameSearchSession { get; set; }
 
+        public int DelayTimeReplyMin { get; set; } = 5;
+
         [NonSerialized()]
         public bool SingletonInitialized = false;
 

@@ -93,6 +93,10 @@ namespace OpenCollarBot.Staff
                 }
             }
 
+            if(OCBSession.Instance.LastReplyPosted.AddMinutes(OCBotMemory.Memory.DelayTimeReplyMin) > DateTime.Now)
+            {
+                return;
+            }
 
 
             foreach(KeyValuePair<string,ReplacePattern> KVP in OCBotMemory.Memory.AutoReplyWatchPatterns)
@@ -131,7 +135,7 @@ namespace OpenCollarBot.Staff
 
                         if (!reply_data.Ignore)
                         {
-
+                            OCBSession.Instance.LastReplyPosted = DateTime.Now;
                             MHE(src, originator, KVP.Value.Reply);
                             if (!has_reply_data)
                             {
