@@ -328,8 +328,12 @@ namespace OpenCollarBot
 
 
         public GitCommands() { }
-
-
+        
+        private struct GHEvents
+        {
+            public string Key;
+            public string Value;
+        }
         public static void Process(string Response, string GHEvent)
         {
 
@@ -344,7 +348,13 @@ namespace OpenCollarBot
 
             try
             {
-                KeyValuePair<string, string> item = new KeyValuePair<string, string>("X-Github-Event", GHEvent);
+                //KeyValuePair<string, string> item = new KeyValuePair<string, string>("X-Github-Event", GHEvent);
+                GHEvents item = new GHEvents
+                {
+                    Key = "X-Github-Event",
+                    Value = GHEvent
+                };
+
                 if (item.Key == "X-Github-Event")
                 {
                     if (item.Value == "issues")
